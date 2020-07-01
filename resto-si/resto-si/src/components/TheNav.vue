@@ -1,8 +1,10 @@
 <template>
   <div>
     <button v-b-toggle.sidebar-backdrop class="burgerbar">
-      <font-awesome-icon :icon="bars" size="20px"/> Menu
+      <font-awesome-icon :icon="bars"/> Menu
     </button>
+    <h1>{{appname}}</h1>
+       <h1>{{appname}}</h1>
     <b-sidebar
       id="sidebar-backdrop"
       backdrop
@@ -49,7 +51,8 @@ export default {
           name: 'Menu Editor',
           slug: 'Menu'
         }
-      ]
+      ],
+      appname: process.env.FIREBASE_PROJECT_ID
     }
   },
   methods: {
