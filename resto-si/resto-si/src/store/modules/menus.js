@@ -8,7 +8,7 @@ export default{
   },
   actions: {
     createMenu(context, {name, price}){
-      const menuId = firebase.database().ref('menu').push.key
+      const menuId = firebase.database().ref('menus').push().key
       const menu = {name, price}
 
       const updates = {}
@@ -24,7 +24,7 @@ export default{
     // },
     fetchAllMenus(context){
       return new Promise((resolve) => {
-        firebase.database().ref('menu').once('value', snapshot => {
+        firebase.database().ref('menus').once('value', snapshot => {
           const menusObject = snapshot.val()
           Object.keys(menusObject).forEach(menuId => {
             const menu = menusObject[menuId]
