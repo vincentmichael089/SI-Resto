@@ -1,6 +1,8 @@
 <template>
   <div>
-    <b-button v-b-toggle.sidebar-backdrop>Toggle Sidebar</b-button>
+    <button v-b-toggle.sidebar-backdrop class="burgerbar">
+      <font-awesome-icon :icon="bars" size="20px"/> Menu
+    </button>
     <b-sidebar
       id="sidebar-backdrop"
       backdrop
@@ -20,6 +22,8 @@
 </template>
 
 <script>
+import { faBars } from '@fortawesome/free-solid-svg-icons'
+
 export default {
   name: 'TheNav',
   data(){
@@ -42,7 +46,7 @@ export default {
           slug: 'Insight'
         },
         {
-          name: 'Menu',
+          name: 'Menu Editor',
           slug: 'Menu'
         }
       ]
@@ -56,6 +60,11 @@ export default {
       }
       event.currentTarget.className += "active disabled sidebar-route-act";
     }
+  },
+  computed: {
+    bars(){
+      return faBars
+    }
   }
 }
 </script>
@@ -67,6 +76,14 @@ export default {
 
   .sidebar-route-act {
     background-color: #08f26d3b;
+  }
+
+  .burgerbar {
+    padding: 0.8em;
+    height: 20px;
+    background-color: white;
+    border: none;
+    outline:none;
   }
 </style>>
 
