@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-// import Vue from 'vue'
+import Vue from 'vue'
 
 export default{
   namespaced: true,
@@ -33,7 +33,12 @@ export default{
           resolve(menu)
         })
       })
-      
+    },
+    deleteMenu(context, id){
+      firebase.database().ref('menus').child(id).remove()
+      .then(() => {
+        context.commit('deleteMenu', {id})
+      })
     },
     fetchAllMenus(context){
       return new Promise((resolve) => {
@@ -52,6 +57,8 @@ export default{
     }
   },
   mutations: {
-
+    deleteMenu(state, {id}){
+      Vue.delete(state.items, id)
+    }
   }
 }

@@ -64,6 +64,7 @@
 
       <!-- Table -->
         <b-table
+          sticky-header
           show-empty
           fixed
           small
@@ -145,10 +146,10 @@
         okVariant= 'danger'
         headerClass= 'p-2 border-bottom-0'
         footerClass= 'p-2 border-top-0'>
-        {{ deleteMenuModal.content }}
+        {{ deleteMenuModal.content.text }}
         <template v-slot:modal-footer="{ ok, cancel }">
           <b-button size="sm" @click="cancel()">Batal</b-button>
-          <b-button size="sm" variant="danger" @click="ok()">Hapus</b-button>
+          <b-button size="sm" variant="danger" @click="deleteMenu()">Hapus</b-button>
         </template>
       </b-modal>
     </b-card>
@@ -208,7 +209,10 @@ export default {
       deleteMenuModal: { 
         id: 'delete-menu-modal',
         title: '',
-        content: ''
+        content: {
+          id: null,
+          text: ''
+        }
       }
     }
   },
@@ -260,7 +264,12 @@ export default {
         this.$root.$emit('bv::hide::modal', this.editMenuModal.id)
       })
     },
-
+    deleteMenu(){
+      return this.$store.dispatch('menus/deleteMenu', this.deleteMenuModal.content.id) 
+      .then(() => {
+        this.$root.$emit('bv::hide::modal', this.deleteMenuModal.id)
+      })
+    },
     // modals methods
     setEditModal(item, index, button) {
       this.editMenuModal.title = `Ubah menu: ${item.name}`
@@ -275,7 +284,8 @@ export default {
     },
     setDeleteModal(item, index, button){
       this.deleteMenuModal.title = `Hapus menu ${item.name}?`
-      this.deleteMenuModal.content = `Apakah anda yakin ingin menghapus ${item.name}?`
+      this.deleteMenuModal.content.text = `Apakah anda yakin ingin menghapus ${item.name}?`
+      this.deleteMenuModal.content.id = item['.key']
       this.$root.$emit('bv::show::modal', this.deleteMenuModal.id, button)
     }
   },
