@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1>Recap</h1>
+    <div style="margin: 1rem;">
+      <h4>Rekapitulasi</h4>
+    </div>
   </div>
 </template>
 

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1>Insight</h1>
+    <div style="margin: 1rem;">
+      <h4>Insight</h4>
+    </div>
   </div>
 </template>
 

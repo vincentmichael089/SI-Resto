@@ -1,6 +1,8 @@
 <template>
   <div class="home">
-    <h1>Home</h1>
+    <div style="margin: 1rem;">
+      <h4>Beranda</h4>
+    </div>
   </div>
 </template>
 

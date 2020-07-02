@@ -9,11 +9,11 @@
       size="sm" 
       variant="success"
       @click="setAddModal($event.target)"><font-awesome-icon :icon="icoPlus"/> Tambah Menu </b-button>
-      </div>
+    </div>
     <b-card  
       header-tag="header"  
       style="margin: 1rem;"
-      class="mb-2">
+      class="mb-2 ">
       <template v-slot:header>
         <b-row>
           <!-- Search bar -->
@@ -64,33 +64,38 @@
 
       <!-- Table -->
         <b-table
-          sticky-header
           show-empty
-          fixed
           small
-          striped
           bordered
           hover
-          stacked="md"
+          head-variant="light"
+          sticky-header="400px"
           :items="menus"
           :fields="fields"
           :filter="filter"
           :filterIncludedFields="filterOn"
           :sort-by.sync="sortBy"
           :sort-desc.sync="sortDesc"
+          :busy="isBusy"
         >
-        <template v-slot:cell(actions)="row">
-          <b-button variant="info" size="sm" 
-            @click="setEditModal(row.item, row.index, $event.target)" class="mr-1">
-            <font-awesome-icon :icon="icoEdit"/>
-          </b-button>
-          <b-button variant="danger" size="sm" 
-            @click="setDeleteModal(row.item, row.index, $event.target)">
-            <font-awesome-icon :icon="icoTrash"/>
-          </b-button>
-        </template>
-      </b-table>
-
+          <template v-slot:cell(actions)="row">
+            <b-button variant="info" size="sm" 
+              @click="setEditModal(row.item, row.index, $event.target)" class="mr-1">
+              <font-awesome-icon :icon="icoEdit"/>
+            </b-button>
+            <b-button variant="danger" size="sm" 
+              @click="setDeleteModal(row.item, row.index, $event.target)">
+              <font-awesome-icon :icon="icoTrash"/>
+            </b-button>
+          </template>
+          <template v-slot:table-busy>
+            <div class="text-center text-secondary my-2">
+              <b-spinner variant="secondary" class="align-middle"></b-spinner>
+              <strong>Memuat...</strong>
+            </div>
+          </template>
+        </b-table>
+     
       <!-- Edit Menu Modal -->
       <b-modal :id="editMenuModal.id" :title="editMenuModal.title" centered button-size="sm"
         headerClass= 'p-2'
@@ -192,6 +197,8 @@ export default {
       // sort
       sortBy: '',
       sortDesc: false,
+      // busy indicator
+      isBusy: true,
       // modal
       editMenuModal: {
         id: 'edit-menu-modal',
@@ -228,6 +235,7 @@ export default {
           return { text: field.label, value: field.key }
         })
     },
+    // icon loader
     icoTrash(){
       return faTrash
     },
@@ -291,6 +299,9 @@ export default {
   },
   beforeCreate(){
     this.$store.dispatch('menus/fetchAllMenus')
+    .then(() => {
+      this.isBusy = !this.isBusy
+    })
   }
 }
 </script>
