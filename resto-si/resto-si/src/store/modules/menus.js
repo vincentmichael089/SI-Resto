@@ -7,9 +7,9 @@ export default{
     items: {}
   },
   actions: {
-    createMenu(context, {name, price}){
+    createMenu(context, {name, price, type}){
       const menuId = firebase.database().ref('menus').push().key
-      const menu = {name, price}
+      const menu = {name, price, type}
 
       const updates = {}
       updates[`menus/${menuId}`] = menu
@@ -26,10 +26,12 @@ export default{
       return new Promise((resolve) => {
         firebase.database().ref('menus').once('value', snapshot => {
           const menusObject = snapshot.val()
-          Object.keys(menusObject).forEach(menuId => {
-            const menu = menusObject[menuId]
-            context.commit('setItem', {resource: 'menus', id: menuId, item: menu}, {root: true})
-          })
+          if(menusObject){
+            Object.keys(menusObject).forEach(menuId => {
+              const menu = menusObject[menuId]
+              context.commit('setItem', {resource: 'menus', id: menuId, item: menu}, {root: true})
+            })
+          }  
           resolve(Object.values(context.state.items))
         })
       })

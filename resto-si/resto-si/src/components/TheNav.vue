@@ -1,10 +1,9 @@
 <template>
   <div>
     <button v-b-toggle.sidebar-backdrop class="burgerbar">
-      <font-awesome-icon :icon="bars"/> Menu
+      <font-awesome-icon :icon="bars"/> SIRESTO
     </button>
-    <h1>{{appname}}</h1>
-       <h1>{{appname}}</h1>
+    <hr>
     <b-sidebar
       id="sidebar-backdrop"
       backdrop
