@@ -105,7 +105,7 @@
           </b-form-group>
         <template v-slot:modal-footer="{ ok, cancel }">
           <b-button size="sm" variant="danger" @click="cancel()">Batal</b-button>
-          <b-button size="sm" variant="success" @click="ok()">Simpan</b-button>
+          <b-button size="sm" variant="success" @click="updateMenu()">Simpan</b-button>
         </template>
       </b-modal>
 
@@ -248,11 +248,23 @@ export default {
         this.$root.$emit('bv::hide::modal', this.addMenuModal.id)
       })
     },
+    updateMenu(){
+      const payload = {
+        id: this.editMenuModal.content.key, 
+        newName: this.editMenuModal.content.name, 
+        newPrice: this.editMenuModal.content.price, 
+        newType: this.editMenuModal.content.type
+      }
+      return this.$store.dispatch('menus/updateMenu', payload) 
+      .then(() => {
+        this.$root.$emit('bv::hide::modal', this.editMenuModal.id)
+      })
+    },
 
     // modals methods
     setEditModal(item, index, button) {
       this.editMenuModal.title = `Ubah menu: ${item.name}`
-      this.editMenuModal.content.key = item.key
+      this.editMenuModal.content.key = item['.key']
       this.editMenuModal.content.name = item.name
       this.editMenuModal.content.type = item.type
       this.editMenuModal.content.price = item.price

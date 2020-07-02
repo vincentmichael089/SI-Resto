@@ -19,9 +19,22 @@ export default{
         return Promise.resolve(context.state.items[menuId])
       })
     },
-    // updateMenu(context, menu){
+    updateMenu(context, {id, newName, newPrice, newType}){
+      return new Promise((resolve) => {
+        const menu = context.state.items[id]
+        const updates = {}
+        updates.name = newName
+        updates.price = newPrice
+        updates.type = newType
 
-    // },
+        firebase.database().ref('menus').child(id).update(updates)
+        .then(() => {
+          context.commit('setItem', {resource: 'menus', item: {...menu, name: newName, price: newPrice, type: newType}, id:id},{root: true})
+          resolve(menu)
+        })
+      })
+      
+    },
     fetchAllMenus(context){
       return new Promise((resolve) => {
         firebase.database().ref('menus').once('value', snapshot => {
