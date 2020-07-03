@@ -79,7 +79,7 @@
           :busy="isBusy"
         >
           <template v-slot:cell(actions)="row">
-            <b-button variant="info" size="sm" 
+            <b-button variant="warning" size="sm" 
               @click="setEditModal(row.item, row.index, $event.target)" class="mr-1">
               <font-awesome-icon :icon="icoEdit"/>
             </b-button>
