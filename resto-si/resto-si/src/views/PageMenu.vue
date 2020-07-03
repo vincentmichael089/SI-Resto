@@ -163,6 +163,7 @@
 
 <script>
 import { faTrash, faPen, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
+import { toCurrencyFormat } from '@/utils/index.js'
 
 export default {
   name: 'Menu',
@@ -188,7 +189,7 @@ export default {
               return value == 'food' ? 'Makanan' : 'Minuman'
             },
         },
-        { key: 'price', label: 'Harga', class: 'text-center', sortable: true },
+        { key: 'price', label: 'Harga', class: 'text-center', sortable: true, formatter: toCurrencyFormat},
         { key: 'actions', label: '', class: 'text-center' }
       ],
       // filter

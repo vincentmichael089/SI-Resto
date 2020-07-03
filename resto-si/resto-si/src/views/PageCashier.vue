@@ -14,7 +14,7 @@
       header-tag="header"  
       style="margin: 1rem;"
       class="mb-2 ">
-      <template v-slot:header><strong>Total Pemasukan Hari Ini: Rp {{dailyIncome}}</strong></template>
+      <template v-slot:header><strong>Total Pemasukan Hari Ini: {{dailyIncome}}</strong></template>
       <!-- Table -->
         <b-table
           show-empty
@@ -58,6 +58,7 @@
 
 <script>
 import { faPlusSquare, faSearch, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { toCurrencyFormat } from '@/utils/index.js'
 
 export default {
   name: 'Cashier',
@@ -66,7 +67,7 @@ export default {
       fields: [
         { key: 'transactionId', label: 'ID Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc' },
         { key: 'timestamp', label: 'Tanggal Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc'},
-        { key: 'income', label: 'Pemasukan', class: 'text-center', sortable: true, sortDirection: 'desc' },
+        { key: 'income', label: 'Pemasukan', class: 'text-center', sortable: true, sortDirection: 'desc', formatter: toCurrencyFormat},
         { key: 'actions', label: '', class: 'text-center' },
       ],
       // busy indicator
@@ -101,7 +102,7 @@ export default {
           dailyIncome += item.qty * item.price
         });
       })
-      return dailyIncome
+      return toCurrencyFormat(dailyIncome)
     },
     menus(){
       return Object.values(this.$store.state.menus.items)
@@ -118,7 +119,7 @@ export default {
     },
     icoTrash(){
       return faTrash
-    },
+    }
   },
   methods: {
 
