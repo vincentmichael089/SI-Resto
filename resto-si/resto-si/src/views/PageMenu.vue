@@ -163,10 +163,11 @@
 
 <script>
 import { faTrash, faPen, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
-import { toCurrencyFormat } from '@/utils/index.js'
+import currencyFormatter from '@/mixins/currencyFormatter'
 
 export default {
   name: 'Menu',
+   mixins: [currencyFormatter],
   data(){
     return {
       newMenu: {
@@ -189,7 +190,7 @@ export default {
               return value == 'food' ? 'Makanan' : 'Minuman'
             },
         },
-        { key: 'price', label: 'Harga', class: 'text-center', sortable: true, formatter: toCurrencyFormat},
+        { key: 'price', label: 'Harga', class: 'text-center', sortable: true, formatter: this.toCurrencyFormat},
         { key: 'actions', label: '', class: 'text-center' }
       ],
       // filter

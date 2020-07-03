@@ -33,7 +33,7 @@
         </template>
         <template v-slot:cell(actions)="row">
           <b-button variant="info" size="sm" 
-            @click="setEditModal(row.item, row.index, $event.target)" class="mr-1">
+            @click="setInfoModal(row.item, row.index, $event.target)" class="mr-1">
             <font-awesome-icon :icon="icoSearch"/>
           </b-button>
           <b-button variant="warning" size="sm" 
@@ -67,16 +67,67 @@
           <b-button size="sm" variant="danger" @click="deleteTransaction()">Hapus</b-button>
         </template>
       </b-modal>
+      <!-- Info Transaction Modal -->
+      <b-modal 
+        :id="infoTransactionModal.id" 
+        :title="infoTransactionModal.title" 
+        button-size="sm"
+        scrollable
+        centered
+        size="md"
+        headerClass= 'p-2 border-bottom-0'
+        footerClass= 'p-2 border-top-0'>
+        <div>
+          <strong>Keterangan</strong>
+          <div class="col">
+            <table style="width: 100%;">
+              <tr>
+                <td>Waktu Transaksi</td>
+                <td>{{infoTransactionModal.content.timestamp}}</td>
+              </tr>
+              <tr>
+                <td>Kasir</td>
+                <td>{{infoTransactionModal.content.cashier}}</td>
+              </tr>
+              <tr>
+                <td>Nomor Meja</td>
+                <td>{{infoTransactionModal.content.tableNumber}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <br>
+        <div>
+          <strong>Rincian Order</strong>
+          <div class="col">
+            <table style="width: 100%;">
+              <tr v-for="item in infoTransactionModal.content.transactionItems" :key="item.key">
+                <td>{{item.qty}} x</td>
+                <td>{{item.name}}</td>
+                <td style="text-align: right;">{{toCurrencyFormat(item.qty * item.price)}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <hr>
+        <div style="position: relative">
+          <div style="position: absolute; right: 5px; top: -10px"><strong>Total: {{infoTransactionModal.content.income}}</strong></div>
+        </div>
+        <template v-slot:modal-footer="{ ok }">
+          <b-button size="sm" @click="ok()">Tutup</b-button>
+        </template>
+      </b-modal>
     </b-card>
   </div>
 </template>
 
 <script>
 import { faPlusSquare, faSearch, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { toCurrencyFormat } from '@/utils/index.js'
+import currencyFormatter from '@/mixins/currencyFormatter'
 
 export default {
   name: 'Cashier',
+  mixins: [currencyFormatter],
   data(){
     return{
       newTransaction: {
@@ -94,7 +145,7 @@ export default {
       fields: [
         { key: 'transactionId', label: 'ID Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc' },
         { key: 'timestamp', label: 'Tanggal Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc'},
-        { key: 'income', label: 'Pemasukan', class: 'text-center', sortable: true, sortDirection: 'desc', formatter: toCurrencyFormat},
+        { key: 'income', label: 'Pemasukan', class: 'text-center', sortable: true, sortDirection: 'desc' },
         { key: 'actions', label: '', class: 'text-center' },
       ],
       // busy indicator
@@ -107,6 +158,11 @@ export default {
           id: null,
           text: ''
         }
+      },
+      infoTransactionModal: {
+        id: 'info-transaction-modal',
+        title: '',
+        content: {}
       }
     }
   },
@@ -114,10 +170,10 @@ export default {
     transactions(){
       return [...Object.values(this.$store.state.transactions.items)].map(transaction => {
         let sum = 0;
-        const transactionItems = [...Object.values(transaction.items)]
-        transactionItems.forEach(item => {
+        [...Object.values(transaction.items)].forEach(item => {
           sum += item.qty * item.price
         });
+        
         return { 
           key: transaction['.key'],
           transactionId: transaction.cashier.toString().concat(`-${transaction.tableNumber.toString()}-`.concat(transaction.timestamp.toString())),
@@ -125,8 +181,8 @@ export default {
           tableNumber: transaction.tableNumber,
           timestamp: transaction.timestamp,
           lastEditAt:transaction.lastEditAt,
-          transactionItems: transactionItems,
-          income: sum
+          transactionItems: transaction.items,
+          income: this.toCurrencyFormat(sum)
         }
       })
     },
@@ -138,7 +194,7 @@ export default {
           dailyIncome += item.qty * item.price
         });
       })
-      return toCurrencyFormat(dailyIncome)
+      return this.toCurrencyFormat(dailyIncome)
     },
     menus(){
       return Object.values(this.$store.state.menus.items)
@@ -174,6 +230,11 @@ export default {
       })
     },
     // modals
+    setInfoModal(item, index, button){
+      this.infoTransactionModal.title = `Rincian Transaksi ${item.transactionId}`
+      this.infoTransactionModal.content = item
+      this.$root.$emit('bv::show::modal', this.infoTransactionModal.id, button)
+    },
     setDeleteModal(item, index, button){
       this.deleteTransactionModal.title = `Hapus transaksi ${item.transactionId} ?`
       this.deleteTransactionModal.content.text = `Apakah anda yakin ingin menghapus transaksi ${item.transactionId} ?`
