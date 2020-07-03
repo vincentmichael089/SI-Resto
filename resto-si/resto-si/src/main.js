@@ -3,6 +3,7 @@ import 'mutationobserver-shim'
 import Vue from 'vue'
 import './plugins/bootstrap-vue'
 import App from './App.vue'
+import AppDate from '@/components/AppDate'
 import router from './router'
 import store from './store'
 import firebase from 'firebase'
@@ -12,6 +13,7 @@ import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fort
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)
 Vue.component('font-awesome-layers-text', FontAwesomeLayersText)
+Vue.component('AppDate', AppDate)
 
 Vue.config.productionTip = false
 

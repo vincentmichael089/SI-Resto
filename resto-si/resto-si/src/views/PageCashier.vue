@@ -16,6 +16,21 @@
       style="margin: 1rem;"
       class="mb-2 ">
       <template v-slot:header><strong>Daftar Transaksi</strong></template>
+      <!-- Table -->
+        <b-table
+          show-empty
+          small
+          bordered
+          hover
+          head-variant="light"
+          sticky-header="400px"
+          :items="transactions"
+          :fields="fields"
+        >
+          <template v-slot:cell(timestamp)="data">
+            <AppDate v-bind:date="data.item.timestamp" v-bind:lastEditAt="data.item.lastEditAt"/>
+          </template>
+        </b-table>
     </b-card>
   </div>
 </template>
@@ -27,13 +42,33 @@ export default {
   name: 'Cashier',
   data(){
     return{
+      fields: [
+        { key: 'transactionId', label: 'ID Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc' },
+        { key: 'timestamp', label: 'Tanggal Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc'},
+        { key: 'income', label: 'Pemasukan', class: 'text-center', sortable: true, sortDirection: 'desc' },
+      ],
       // busy indicator
       isBusy: true,
     }
   },
   computed: {
     transactions(){
-      return Object.values(this.$store.state.transactions.items)
+      return [...Object.values(this.$store.state.transactions.items)].map(transaction => {
+        let sum = 0
+        const transactionItems = [...Object.values(transaction.items)]
+        transactionItems.forEach(item => {
+          sum += item.qty * item.price
+        });
+        return { 
+          key: transaction['.key'],
+          transactionId: transaction.cashier.toString().concat(transaction['.key'].toString()),
+          cashier: transaction.cashier,
+          timestamp: transaction.timestamp,
+          lastEditAt:transaction.lastEditAt,
+          transactionItems: transactionItems,
+          income: sum
+        }
+      })
     },
     menus(){
       return Object.values(this.$store.state.menus.items)
@@ -42,6 +77,9 @@ export default {
     icoPlus(){
       return faPlusSquare
     }
+  },
+  methods: {
+
   },
   beforeCreate(){
     this.$store.dispatch('transactions/fetchAllTransactions')
