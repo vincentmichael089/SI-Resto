@@ -53,6 +53,16 @@ export default{
           resolve(Object.values(context.state.items))
         })
       })
+    },
+    setMenuQtyZero(context){
+      return new Promise((resolve) => {
+        const modifiedMenu = context.state.items
+        Object.keys(modifiedMenu).forEach(menuId => {
+          const menu = modifiedMenu[menuId]
+          context.commit('setItem', {resource: 'menus', id: menuId, item: {...menu, qty: 0}}, {root: true})
+        })
+        resolve(Object.values(context.state.items))
+      })
       
     }
   },

@@ -233,11 +233,12 @@ export default {
       const name = this.newMenu.name
       const price = this.newMenu.price
       const type = this.newMenu.type
-      this.newMenu.name = ''
-      this.newMenu.price = ''
-      this.newMenu.type = ''
+
       return this.$store.dispatch('menus/createMenu', {name: name, price: price, type: type}) // return a promise (check store)
       .then(() => {
+        this.newMenu.name = ''
+        this.newMenu.price = ''
+        this.newMenu.type = ''
         this.$root.$emit('bv::hide::modal', this.addMenuModal.id)
       })
     },

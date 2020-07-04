@@ -174,7 +174,7 @@
               <b-input-group size="sm">
                 <b-form-input
                   v-model="newTransaction.tableNumber"
-                  placeholder="ketik nama menu..."
+                  placeholder="nomor meja..."
                 ></b-form-input>
               </b-input-group>
             </b-form-group></b-col>
@@ -200,7 +200,7 @@
           </b-col>
         </b-row>
         </div>
-        <div style="height:calc(80  vh - 200px)">
+        <div style="height:calc(80vh - 200px)">
           <!-- Table Menu-->
           <b-table
             show-empty
@@ -208,15 +208,17 @@
             hover
             borderless
             head-variant="light"
-            sticky-header="400px"
+            sticky-header="40vh"
             :items="menus"
             :fields="menusFields"
             :filter="filterMenu"
             :filterIncludedFields="filterMenuOn"
             style="padding-top: 4px"
           >
-            <template v-slot:cell(qty)>
-              <b-form-spinbutton id="sb-inline" min="0" inline></b-form-spinbutton>
+            <template v-slot:cell(qty)="row">
+              <b-form-spinbutton id="sb-inline" 
+                v-model="row.item.qty" min="0" 
+                inline/>
             </template>
             <template v-slot:table-busy>
               <div class="text-center text-secondary my-2">
@@ -225,13 +227,18 @@
               </div>
             </template>
           </b-table>
+          <hr style="margin-bottom: 1vh">
+          <table style="width: 100%;" class="col">
+            <tr>
+              <td style="padding: 0 8px 0 2vh"><strong>Total: {{totalMenus}}</strong></td>
+            </tr>
+          </table>
         </div>
         <template v-slot:modal-footer="{ ok, cancel }">
           <b-button size="sm" variant="danger" @click="cancel()">Batal</b-button>
           <b-button size="sm" variant="success" @click="createTransaction()">Tambah Transaksi</b-button>
         </template>  
       </b-modal>
-      {{menus}}
     </b-card>
   </div>
 </template>
@@ -247,14 +254,7 @@ export default {
     return{
       newTransaction: {
         cashier: 'mock',
-        items: {
-          itemmock1: {
-            name: 'mockmenu',
-            price: 20000,
-            qty: 2,
-            typr: 'food'
-          }
-        },
+        items: {},
         tableNumber: null,
       },
       fields: [
@@ -264,12 +264,12 @@ export default {
         { key: 'actions', label: '', class: 'text-center' },
       ],
       menusFields: [
-        { key: 'name', label: 'Nama Menu', class: 'text-center', sortable: true },
+        { key: 'name', label: 'Menu', class: 'text-center', sortable: true },
         { key: 'type', label: 'Tipe', class: 'text-center', sortable: true, formatter: (value) => {
           return value == 'food' ? 'Makanan' : 'Minuman'
         }},
-        { key: 'price', label: 'Harga', class: 'text-center' },
-        { key: 'qty', label: 'Jumlah', class: 'text-center' }
+        { key: 'price', label: 'Harga', class: 'text-center', formatter: this.toCurrencyFormat},
+        { key: 'qty', label: 'Porsi', class: 'text-center' }
       ],
       // busy indicator
       isBusy: true,
@@ -310,13 +310,13 @@ export default {
         
         return { 
           key: transaction['.key'],
-          transactionId: transaction.cashier.toString().toUpperCase().concat(`-${transaction.tableNumber.toString()}-`.concat(transaction.timestamp.toString())),
+          transactionId: transaction.cashier.toUpperCase().concat(`-${transaction.tableNumber}-`.concat(transaction.timestamp)),
           cashier: transaction.cashier,
           tableNumber: transaction.tableNumber,
           timestamp: transaction.timestamp,
           lastEditAt:transaction.lastEditAt,
           transactionItems: transaction.items,
-          income: this.toCurrencyFormat(sum)
+          income: this.toCurrencyFormat(sum),
         }
       })
     },
@@ -331,7 +331,15 @@ export default {
       return this.toCurrencyFormat(dailyIncome)
     },
     menus(){
-      return Object.values(this.$store.state.menus.items)
+      return [...Object.values(this.$store.state.menus.items)]
+    },
+    totalMenus(){
+      let totalPrice = 0;
+      [...Object.values(this.menus)].map(menu => {
+        totalPrice += menu.qty * menu.price
+      })
+
+      return this.toCurrencyFormat(totalPrice)
     },
     // icon loader
     icoPlus(){
@@ -351,11 +359,25 @@ export default {
     createTransaction(){
       const cashier = this.newTransaction.cashier
       const tableNumber = this.newTransaction.tableNumber
-      const items = this.newTransaction.items
-      this.newTransaction.cashier = ''
-      this.newTransaction.tableNumber = ''
-      this.newTransaction.items = ''
+      
+      const arrayToObject = (array, keyField) =>
+        array.reduce((obj, item) => {
+          obj[item[keyField]] = item
+          delete obj[item[keyField]]['.key']
+          return obj
+        }, {})
+
+      const selectedMenus = this.menus.filter(menu => menu.qty !== 0)
+      const items = arrayToObject(selectedMenus, ".key")
+
       return this.$store.dispatch('transactions/createTransaction', {cashier: cashier, tableNumber: tableNumber, items: items})
+      .then(() => {
+        //this.newTransaction.cashier = ''
+        this.newTransaction.tableNumber = ''
+        this.newTransaction.items = ''
+        this.refreshMenuState()
+        this.$root.$emit('bv::hide::modal', this.addTransactionModal.id)
+      })
     },
     deleteTransaction(){
       return this.$store.dispatch('transactions/deleteTransaction', this.deleteTransactionModal.content.id) 
@@ -377,10 +399,15 @@ export default {
       this.deleteTransactionModal.content.text = `Apakah anda yakin ingin menghapus transaksi ${item.transactionId} ?`
       this.deleteTransactionModal.content.id = item.key
       this.$root.$emit('bv::show::modal', this.deleteTransactionModal.id, button)
+    },
+    refreshMenuState(){
+      this.$store.dispatch('menus/setMenuQtyZero')
     }
   },
   beforeCreate(){
-    this.$store.dispatch('menus/fetchAllMenus')
+    this.$store.dispatch('menus/fetchAllMenus').then(() => {
+      this.refreshMenuState()
+    })
     this.$store.dispatch('transactions/fetchAllTransactions').then(() => {
       this.isBusy = false
     })
