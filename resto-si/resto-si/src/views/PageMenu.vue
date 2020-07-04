@@ -16,6 +16,8 @@
       class="mb-2 ">
       <template v-slot:header>
         <b-row>
+          <b-col lg="6" class="my-1">
+          </b-col>
           <!-- Search bar -->
           <b-col lg="6" class="my-1">  
             <b-form-group
@@ -33,29 +35,6 @@
                   id="filterInput"
                   placeholder="Ketik nama menu..."
                 ></b-form-input>
-              </b-input-group>
-            </b-form-group>
-          </b-col>
-          <!-- Sorting -->
-          <b-col lg="6" class="my-1">
-            <b-form-group
-              label='Urutkan'
-              label-cols-lg="3"
-              label-align-lg="right"
-              label-size="sm"
-              label-for="sortBySelect"
-              class="mb-0"
-            >
-              <b-input-group size="sm">
-                <b-form-select v-model="sortBy" id="sortBySelect" :options="sortOptions" class="w-75">
-                  <template v-slot:first>
-                    <option value="">-- urutkan --</option>
-                  </template>
-                </b-form-select>
-                <b-form-select v-model="sortDesc" size="sm" :disabled="!sortBy" class="w-25">
-                  <option :value="false">Asc</option>
-                  <option :value="true">Desc</option>
-                </b-form-select>
               </b-input-group>
             </b-form-group>
           </b-col>
@@ -163,11 +142,11 @@
 
 <script>
 import { faTrash, faPen, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
-import currencyFormatter from '@/mixins/currencyFormatter'
+import valueFormatter from '@/mixins/valueFormatter'
 
 export default {
   name: 'Menu',
-   mixins: [currencyFormatter],
+   mixins: [valueFormatter],
   data(){
     return {
       newMenu: {

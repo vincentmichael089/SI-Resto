@@ -8,17 +8,41 @@
       <b-button 
       size="sm" 
       variant="success"
-      @click="createTransaction()"><font-awesome-icon :icon="icoPlus"/> Transaksi Baru </b-button>
+      @click="setAddModal($event.target)"><font-awesome-icon :icon="icoPlus"/> Transaksi Baru </b-button>
     </div>
     <b-card  
       header-tag="header"  
       style="margin: 1rem;"
       class="mb-2 ">
-      <template v-slot:header><strong>Total Pemasukan Hari Ini: {{dailyIncome}}</strong></template>
+      <template v-slot:header>
+        <b-row>
+          <b-col lg="6" class="my-1"><strong>Total Pemasukan Hari Ini: {{dailyIncome}}</strong></b-col>
+          <!-- Search bar -->
+          <b-col lg="6" class="my-1">  
+            <b-form-group
+              label='Cari Transaksi'
+              label-cols-lg="3"
+              label-align-lg="right"
+              label-size="sm"
+              label-for="filterInput"
+              class="mb-0"
+            >
+              <b-input-group size="sm">
+                <b-form-input
+                  v-model="filter"
+                  type="search"
+                  id="filterInput"
+                  placeholder="Cari ID transaksi..."
+                ></b-form-input>
+              </b-input-group>
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </template>
+
       <!-- Table -->
       <b-table
         show-empty
-        fixed
         small
         bordered
         hover
@@ -27,6 +51,10 @@
         :items="transactions"
         :fields="fields"
         :busy="isBusy"
+        :sort-by.sync="sortBy"
+        :sort-desc.sync="sortDesc"
+        :filter="filter"
+        :filterIncludedFields="filterOn"
       >
         <template v-slot:cell(timestamp)="data">
           <AppDate v-bind:date="data.item.timestamp" v-bind:lastEditAt="data.item.lastEditAt"/>
@@ -79,27 +107,30 @@
         footerClass= 'p-2 border-top-0'>
         <div>
           <strong>Keterangan</strong>
-          <div class="col">
-            <table style="width: 100%;">
+          <div class="col" style="padding-top: 4px">
+            <table>
               <tr>
                 <td>Waktu Transaksi</td>
-                <td>{{infoTransactionModal.content.timestamp}}</td>
+                <td></td>
+                <td>{{toHumaneDate(infoTransactionModal.content.timestamp)}}</td>
               </tr>
               <tr>
                 <td>Kasir</td>
+                <td></td>
                 <td>{{infoTransactionModal.content.cashier}}</td>
               </tr>
               <tr>
                 <td>Nomor Meja</td>
+                <td></td>
                 <td>{{infoTransactionModal.content.tableNumber}}</td>
               </tr>
             </table>
           </div>
         </div>
-        <br>
+        <div style="padding-top: 16px"/>
         <div>
           <strong>Rincian Order</strong>
-          <div class="col">
+          <div class="col" style="padding-top: 4px">
             <table style="width: 100%;">
               <tr v-for="item in infoTransactionModal.content.transactionItems" :key="item.key">
                 <td>{{item.qty}} x</td>
@@ -117,17 +148,101 @@
           <b-button size="sm" @click="ok()">Tutup</b-button>
         </template>
       </b-modal>
+      <!-- Add Transaction Modal -->
+      <b-modal 
+        :id="addTransactionModal.id" 
+        :title="addTransactionModal.title" 
+        button-size="sm"
+        scrollable
+        centered
+        size="lg"
+        headerClass= 'p-2 border-bottom-0'
+        footerClass= 'p-2 border-top-0'>
+        <!-- Table Number -->
+        <div class="col" style="padding-bottom: 4px">
+        <b-row>
+          <!-- Table Number -->
+          <b-col sm="6" class="my-1"> 
+            <b-form-group
+              label='Nomor Meja'
+              label-cols-lg="3"
+              label-align-lg="right"
+              label-size="sm"
+              label-for="filterInput"
+              class="mb-0"
+            >
+              <b-input-group size="sm">
+                <b-form-input
+                  v-model="newTransaction.tableNumber"
+                  placeholder="ketik nama menu..."
+                ></b-form-input>
+              </b-input-group>
+            </b-form-group></b-col>
+          <!-- Search bar -->
+          <b-col sm="6" class="my-1">  
+            <b-form-group
+              label='Cari Menu'
+              label-cols-lg="3"
+              label-align-lg="right"
+              label-size="sm"
+              label-for="filterInput"
+              class="mb-0"
+            >
+              <b-input-group size="sm">
+                <b-form-input
+                  v-model="filterMenu"
+                  type="search"
+                  id="filterMenuInput"
+                  placeholder="ketik nama menu..."
+                ></b-form-input>
+              </b-input-group>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        </div>
+        <div style="height:calc(80  vh - 200px)">
+          <!-- Table Menu-->
+          <b-table
+            show-empty
+            small
+            hover
+            borderless
+            head-variant="light"
+            sticky-header="400px"
+            :items="menus"
+            :fields="menusFields"
+            :filter="filterMenu"
+            :filterIncludedFields="filterMenuOn"
+            style="padding-top: 4px"
+          >
+            <template v-slot:cell(qty)>
+              <b-form-spinbutton id="sb-inline" min="0" inline></b-form-spinbutton>
+            </template>
+            <template v-slot:table-busy>
+              <div class="text-center text-secondary my-2">
+                <b-spinner variant="secondary" class="align-middle"></b-spinner>
+                <strong>Memuat...</strong>
+              </div>
+            </template>
+          </b-table>
+        </div>
+        <template v-slot:modal-footer="{ ok, cancel }">
+          <b-button size="sm" variant="danger" @click="cancel()">Batal</b-button>
+          <b-button size="sm" variant="success" @click="createTransaction()">Tambah Transaksi</b-button>
+        </template>  
+      </b-modal>
+      {{menus}}
     </b-card>
   </div>
 </template>
 
 <script>
 import { faPlusSquare, faSearch, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
-import currencyFormatter from '@/mixins/currencyFormatter'
+import valueFormatter from '@/mixins/valueFormatter'
 
 export default {
   name: 'Cashier',
-  mixins: [currencyFormatter],
+  mixins: [valueFormatter],
   data(){
     return{
       newTransaction: {
@@ -140,16 +255,32 @@ export default {
             typr: 'food'
           }
         },
-        tableNumber: '4',
+        tableNumber: null,
       },
       fields: [
-        { key: 'transactionId', label: 'ID Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc' },
+        { key: 'transactionId', label: 'ID Transaksi', class: 'text-center', sortable: true },
         { key: 'timestamp', label: 'Tanggal Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc'},
-        { key: 'income', label: 'Pemasukan', class: 'text-center', sortable: true, sortDirection: 'desc' },
+        { key: 'income', label: 'Pemasukan', class: 'text-center', sortable: true },
         { key: 'actions', label: '', class: 'text-center' },
+      ],
+      menusFields: [
+        { key: 'name', label: 'Nama Menu', class: 'text-center', sortable: true },
+        { key: 'type', label: 'Tipe', class: 'text-center', sortable: true, formatter: (value) => {
+          return value == 'food' ? 'Makanan' : 'Minuman'
+        }},
+        { key: 'price', label: 'Harga', class: 'text-center' },
+        { key: 'qty', label: 'Jumlah', class: 'text-center' }
       ],
       // busy indicator
       isBusy: true,
+      // filter
+      filter: null,
+      filterMenu: null,
+      filterOn: ["transactionId"],
+      filterMenuOn: ["name"],
+      // sort
+      sortBy: 'timestamp',
+      sortDesc: true,
       // modals
       deleteTransactionModal: { 
         id: 'delete-transaction-modal',
@@ -158,6 +289,9 @@ export default {
           id: null,
           text: ''
         }
+      },
+      addTransactionModal: { 
+        id: 'add-transaction-modal' 
       },
       infoTransactionModal: {
         id: 'info-transaction-modal',
@@ -176,7 +310,7 @@ export default {
         
         return { 
           key: transaction['.key'],
-          transactionId: transaction.cashier.toString().concat(`-${transaction.tableNumber.toString()}-`.concat(transaction.timestamp.toString())),
+          transactionId: transaction.cashier.toString().toUpperCase().concat(`-${transaction.tableNumber.toString()}-`.concat(transaction.timestamp.toString())),
           cashier: transaction.cashier,
           tableNumber: transaction.tableNumber,
           timestamp: transaction.timestamp,
@@ -229,7 +363,10 @@ export default {
         this.$root.$emit('bv::hide::modal', this.deleteTransactionModal.id)
       })
     },
-    // modals
+    // modals    
+    setAddModal(button){
+      this.$root.$emit('bv::show::modal', this.addTransactionModal.id, button)
+    },
     setInfoModal(item, index, button){
       this.infoTransactionModal.title = `Rincian Transaksi ${item.transactionId}`
       this.infoTransactionModal.content = item
@@ -249,9 +386,6 @@ export default {
     })
   }
 }
-
-// transaction id, transaction details, income from transactions
-// gives daily income as caption on top right of table
 </script>
 
 <style>
