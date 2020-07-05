@@ -8,7 +8,7 @@
       <b-button 
       size="sm" 
       variant="success"
-      @click="setAddModal($event.target)"><font-awesome-icon :icon="icoPlus"/> Transaksi Baru </b-button>
+      @click="setEditModal(null, null, $event.target)"><font-awesome-icon :icon="icoPlus"/> Transaksi Baru </b-button>
     </div>
     <b-card  
       header-tag="header"  
@@ -158,9 +158,9 @@
         </template>
       </b-modal>
 
-      <!-- Add Transaction Modal -->
+      <!-- Edit Transaction Modal -->
       <b-modal 
-        :id="addTransactionModal.id" 
+        :id="editTransactionModal.id" 
         button-size="sm"
         scrollable
         centered
@@ -182,7 +182,7 @@
             >
               <b-input-group size="sm">
                 <b-form-input
-                  v-model="newTransaction.tableNumber"
+                  v-model="editTransactionModal.content.tableNumber"
                   placeholder="nomor meja..."
                 ></b-form-input>
               </b-input-group>
@@ -245,13 +245,14 @@
           </table>
         </div>
         <template v-slot:modal-header>
-          <div class="col pt-2 pl-2"><h5 class="pb-0 mb-0">Transaksi Baru</h5></div>
+          <div class="col pt-2 pl-2"><h5 class="pb-0 mb-0">{{editTransactionModal.title}}</h5></div>
           <button type="button" class="close" data-dismiss="modal" @click="cancelTransaction()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer>
           <b-button size="sm" variant="danger" @click="cancelTransaction()">Batal</b-button>
           <b-button size="sm" variant="info" v-b-modal.modal-add-transaction-detail>Rincian</b-button>
-          <b-button size="sm" variant="success" @click="createTransaction()">Selesai</b-button>
+          <b-button v-show="editFlag" size="sm" variant="success" @click="updateTransaction()">Simpan</b-button>
+          <b-button v-show="!editFlag" size="sm" variant="success" @click="createTransaction()">Selesai</b-button>
         </template>  
       </b-modal>
 
@@ -285,12 +286,12 @@
               <tr>
                 <td class="mr-4">Kasir</td>
                 <td></td>
-                <td>{{newTransaction.cashier}}</td>
+                <td>{{editTransactionModal.content.cashier}}</td>
               </tr>
               <tr>
                 <td class="mr-4">Nomor Meja</td>
                 <td></td>
-                <td>{{newTransaction.tableNumber}}</td>
+                <td>{{editTransactionModal.content.tableNumber}}</td>
               </tr>
             </table>
           </div>
@@ -334,11 +335,7 @@ export default {
   mixins: [valueFormatter],
   data(){
     return{
-      newTransaction: {
-        cashier: 'mock',
-        items: {},
-        tableNumber: null,
-      },
+      editFlag: true,
       fields: [
         { key: 'transactionId', label: 'ID Transaksi', class: 'text-center', sortable: true },
         { key: 'timestamp', label: 'Waktu Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc'},
@@ -372,8 +369,15 @@ export default {
           text: ''
         }
       },
-      addTransactionModal: { 
-        id: 'add-transaction-modal' 
+      editTransactionModal: { 
+        id: 'edit-transaction-modal',
+        title: '',
+        content : {
+          key: null,
+          cashier: 'mock',
+          transactionItems: {},
+          tableNumber: null,
+        }
       },
       infoTransactionModal: {
         id: 'info-transaction-modal',
@@ -386,9 +390,12 @@ export default {
     transactions(){
       return [...Object.values(this.$store.state.transactions.items)].map(transaction => {
         let sum = 0;
-        [...Object.values(transaction.items)].forEach(item => {
-          sum += item.qty * item.price
-        });
+
+        if(transaction.items){
+          [...Object.values(transaction.items)].forEach(item => {
+            sum += item.qty * item.price
+          });
+        }
         
         return { 
           key: transaction['.key'],
@@ -405,10 +412,12 @@ export default {
     dailyIncome(){
       let dailyIncome = 0;
       [...Object.values(this.$store.state.transactions.items)].map(transaction => {
-        const transactionItems = [...Object.values(transaction.items)]
-        transactionItems.forEach(item => {
-          dailyIncome += item.qty * item.price
-        });
+        if(transaction.items){
+          const transactionItems = [...Object.values(transaction.items)]
+          transactionItems.forEach(item => {
+            dailyIncome += item.qty * item.price
+          });
+        }
       })
       return this.toCurrencyFormat(dailyIncome)
     },
@@ -441,8 +450,8 @@ export default {
   },
   methods: {
     createTransaction(){
-      const cashier = this.newTransaction.cashier
-      const tableNumber = this.newTransaction.tableNumber
+      const cashier = this.editTransactionModal.content.cashier
+      const tableNumber = this.editTransactionModal.content.tableNumber
       
       const arrayToObject = (array, keyField) =>
         array.reduce((obj, item) => {
@@ -455,19 +464,20 @@ export default {
 
       return this.$store.dispatch('transactions/createTransaction', {cashier: cashier, tableNumber: tableNumber, items: items})
       .then(() => {
-        //this.newTransaction.cashier = ''
-        this.newTransaction.tableNumber = ''
-        this.newTransaction.items = ''
+        //this.editTransaction.cashier = ''
+        this.editTransactionModal.content.tableNumber = ''
+        this.editTransactionModal.content.items = ''
         this.refreshMenuState()
-        this.$root.$emit('bv::hide::modal', this.addTransactionModal.id)
+        this.$root.$emit('bv::hide::modal', this.editTransactionModal.id)
       })
     },
     cancelTransaction(){
-      this.newTransaction.tableNumber = ''
-      this.newTransaction.items = ''
+      console.log("x clicked")
+      this.editTransactionModal.content.tableNumber = ''
+      this.editTransactionModal.content.items = ''
       this.filterMenu = ''
       this.refreshMenuState()
-      this.$root.$emit('bv::hide::modal', this.addTransactionModal.id)
+      this.$root.$emit('bv::hide::modal', this.editTransactionModal.id)
     },
     deleteTransaction(){
       return this.$store.dispatch('transactions/deleteTransaction', this.deleteTransactionModal.content.id) 
@@ -475,12 +485,47 @@ export default {
         this.$root.$emit('bv::hide::modal', this.deleteTransactionModal.id)
       })
     },
+    updateTransaction(){
+      const arrayToObject = (array, keyField) =>
+        array.reduce((obj, item) => {
+          obj[item[keyField]] = item
+          delete obj[item[keyField]]['.key']
+          return obj
+        }, {})
+
+      const items = arrayToObject(this.selectedMenus, ".key")
+
+      const payload = {
+        id: this.editTransactionModal.content.key,
+        newTableNumber: this.editTransactionModal.content.tableNumber,
+        newItems: items
+      }
+
+      return this.$store.dispatch('transactions/updateTransaction', payload) 
+        .then(() => {
+          this.refreshMenuState()
+          this.$root.$emit('bv::hide::modal', this.editTransactionModal.id)
+        })
+    },
     // modals    
-    setAddModal(button){
-      if(this.menus.length == 0){
-        this.$root.$emit('bv::show::modal', "modal-no-menu", button)
+    setEditModal(item, index, button){
+      if(item !== null && index !== null){
+        this.editFlag = true
+        this.editTransactionModal.title = `Ubah Transaksi ${item.transactionId}`
+        this.editTransactionModal.content.key = item.key
+        this.editTransactionModal.content.cashier = item.cashier
+        this.editTransactionModal.content.tableNumber = item.tableNumber
+
+        this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', item.key)
+        this.$root.$emit('bv::show::modal', this.editTransactionModal.id, button)
       }else{
-        this.$root.$emit('bv::show::modal', this.addTransactionModal.id, button)
+        this.editFlag = false
+        if(this.menus.length == 0){
+          this.$root.$emit('bv::show::modal', "modal-no-menu", button)
+        }else{
+          this.editTransactionModal.title = `Tambah Transaksi Baru`
+          this.$root.$emit('bv::show::modal', this.editTransactionModal.id, button)
+        }
       }
     },
     setInfoModal(item, index, button){

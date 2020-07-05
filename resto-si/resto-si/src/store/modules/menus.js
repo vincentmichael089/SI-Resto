@@ -30,7 +30,7 @@ export default{
         firebase.database().ref('menus').child(id).update(updates)
         .then(() => {
           context.commit('setItem', {resource: 'menus', item: {...menu, name: newName, price: newPrice, type: newType}, id:id},{root: true})
-          resolve(menu)
+          resolve()
         })
       })
     },
@@ -54,6 +54,18 @@ export default{
         })
       })
     },
+    fetchAllMenusModifiedByTransactionId(context, id){
+      return new Promise((resolve) => {
+        const transactions = {...context.rootState.transactions.items}
+        const transactionId = Object.keys(transactions).filter(item => item === id)
+        const transactionMenus = transactions[transactionId].items
+        Object.keys(transactionMenus).forEach(menuId => {
+          const menu = transactionMenus[menuId]
+          context.commit('setItem', {resource: 'menus', id: menuId, item: menu}, {root: true})
+        })
+        resolve(context.state.items)
+      })
+    },
     setMenuQtyZero(context){
       return new Promise((resolve) => {
         const modifiedMenu = context.state.items
@@ -63,7 +75,6 @@ export default{
         })
         resolve(Object.values(context.state.items))
       })
-      
     }
   },
   mutations: {
