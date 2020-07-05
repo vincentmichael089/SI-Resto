@@ -93,7 +93,7 @@
         footerClass= 'p-2 border-top-0'>
         {{ deleteTransactionModal.content.text }}
         <template v-slot:modal-header="{ close }">
-          <div class="col pt-2 pl-2"><h5>{{deleteTransactionModal.title}}</h5></div>
+          <div class="col pt-2 pl-2"><h5 h5 class="pb-0 mb-0">{{deleteTransactionModal.title}}</h5></div>
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok, cancel }">
@@ -341,7 +341,7 @@ export default {
       },
       fields: [
         { key: 'transactionId', label: 'ID Transaksi', class: 'text-center', sortable: true },
-        { key: 'timestamp', label: 'Tanggal Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc'},
+        { key: 'timestamp', label: 'Waktu Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc'},
         { key: 'income', label: 'Pemasukan', class: 'text-center', sortable: true },
         { key: 'actions', label: '', class: 'text-center' },
       ],

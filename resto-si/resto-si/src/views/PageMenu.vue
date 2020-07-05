@@ -79,8 +79,9 @@
      
       <!-- Edit Menu Modal -->
       <b-modal :id="editMenuModal.id" :title="editMenuModal.title" centered button-size="sm"
-        headerClass= 'p-2'
-        footerClass= 'p-2'>
+        headerClass= 'p-2 border-bottom-0'
+        footerClass= 'p-2 border-top-0'
+        >
         <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Nama Menu" label-for="input-sm">
           <b-form-input size="sm" v-model="editMenuModal.content.name"></b-form-input>
         </b-form-group>
@@ -95,7 +96,7 @@
           </b-form-select>
         </b-form-group>
         <template v-slot:modal-header>
-          <div class="col pt-2 pl-2"><h5>{{editMenuModal.title}}</h5></div>
+          <div class="col pt-2 pl-2"><h5 class="pb-0 mb-0">{{editMenuModal.title}}</h5></div>
           <button type="button" class="close" data-dismiss="modal" @click="refreshAndCloseEditMenu()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer>
@@ -115,7 +116,7 @@
         footerClass= 'p-2 border-top-0'>
         {{ deleteMenuModal.content.text }}
         <template v-slot:modal-header="{ close }">
-          <div class="col pt-2 pl-2"><h5>{{deleteMenuModal.title}}</h5></div>
+          <div class="col pt-2 pl-2"><h5 h5 class="pb-0 mb-0">{{deleteMenuModal.title}}</h5></div>
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok, cancel }">

@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     humaneDate (timestamp) {
-      return moment.unix(timestamp).format('DD-MM-YYYY (h:m:s a)')
+      return moment.unix(timestamp).format('H:m:s')
     },
   }
 }
