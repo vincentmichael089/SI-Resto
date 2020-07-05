@@ -8,7 +8,7 @@
       <b-button 
       size="sm" 
       variant="success"
-      @click="setAddModal($event.target)"><font-awesome-icon :icon="icoPlus"/> Tambah Menu </b-button>
+      @click="setEditModal(null, null, $event.target)"><font-awesome-icon :icon="icoPlus"/> Tambah Menu </b-button>
     </div>
     <b-card  
       header-tag="header"  
@@ -81,58 +81,43 @@
       <b-modal :id="editMenuModal.id" :title="editMenuModal.title" centered button-size="sm"
         headerClass= 'p-2'
         footerClass= 'p-2'>
-          <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Nama Menu" label-for="input-sm">
-            <b-form-input size="sm" v-model="editMenuModal.content.name"></b-form-input>
-          </b-form-group>
-          <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Harga" label-for="input-sm">
-            <b-form-input size="sm" v-model="editMenuModal.content.price"></b-form-input>
-          </b-form-group>
-          <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Jenis" label-for="input-sm">
-            <b-form-select v-model="editMenuModal.content.type" :options="typeOptions"></b-form-select>
-          </b-form-group>
-        <template v-slot:modal-footer="{ ok, cancel }">
-          <b-button size="sm" variant="danger" @click="cancel()">Batal</b-button>
-          <b-button size="sm" variant="success" @click="updateMenu()">Simpan</b-button>
+        <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Nama Menu" label-for="input-sm">
+          <b-form-input size="sm" v-model="editMenuModal.content.name"></b-form-input>
+        </b-form-group>
+        <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Harga" label-for="input-sm">
+          <b-form-input size="sm" v-model="editMenuModal.content.price"></b-form-input>
+        </b-form-group>
+        <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Jenis" label-for="input-sm">
+          <b-form-select v-model="editMenuModal.content.type" :options="typeOptions">
+            <template v-slot:first>
+              <b-form-select-option :value="null" disabled>-- Pilih jenis menu --</b-form-select-option>
+            </template>
+          </b-form-select>
+        </b-form-group>
+        <template v-slot:modal-header>
+          <div class="col pt-2 pl-2"><h5>{{editMenuModal.title}}</h5></div>
+          <button type="button" class="close" data-dismiss="modal" @click="refreshAndCloseEditMenu()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
-      </b-modal>
-
-       <!-- Add Menu Modal -->
-      <b-modal 
-        :id="addMenuModal.id" title="Tambah Menu Baru" 
-        centered button-size="md"
-        headerClass= 'p-2'
-        footerClass= 'p-2'>
-        <div>
-          <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Nama Menu" label-for="input-sm">
-            <b-form-input size="sm" v-model="newMenu.name"></b-form-input>
-          </b-form-group>
-          <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Harga" label-for="input-sm">
-            <b-form-input size="sm" v-model="newMenu.price"></b-form-input>
-          </b-form-group>
-          <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Jenis" label-for="input-sm">
-            <b-form-select v-model="newMenu.type" :options="typeOptions">
-              <template v-slot:first>
-                <b-form-select-option :value="null" disabled>-- Pilih jenis menu --</b-form-select-option>
-              </template>
-            </b-form-select>
-          </b-form-group>
-        </div>
-        <template v-slot:modal-footer="{ ok, cancel }">
-          <b-button size="sm" variant="danger" @click="cancel()">Batal</b-button>
-          <b-button size="sm" variant="success" @click="createMenu()">Tambah Menu</b-button>
+        <template v-slot:modal-footer>
+          <b-button size="sm" variant="danger" @click="refreshAndCloseEditMenu()">Batal</b-button>
+          <b-button v-show="!editFlag" size="sm" variant="success" @click="createMenu()">Tambah Menu</b-button>
+          <b-button v-show="editFlag" size="sm" variant="success" @click="updateMenu()">Simpan</b-button>
         </template>
       </b-modal>
 
       <!-- Delete Menu Modal -->
       <b-modal 
-        :id="deleteMenuModal.id" 
-        :title="deleteMenuModal.title" 
+        :id="deleteMenuModal.id"  
         centered button-size="sm"
         size="md"
         okVariant= 'danger'
         headerClass= 'p-2 border-bottom-0'
         footerClass= 'p-2 border-top-0'>
         {{ deleteMenuModal.content.text }}
+        <template v-slot:modal-header="{ close }">
+          <div class="col pt-2 pl-2"><h5>{{deleteMenuModal.title}}</h5></div>
+          <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
+        </template>
         <template v-slot:modal-footer="{ ok, cancel }">
           <b-button size="sm" @click="cancel()">Batal</b-button>
           <b-button size="sm" variant="danger" @click="deleteMenu()">Hapus</b-button>
@@ -151,11 +136,7 @@ export default {
    mixins: [valueFormatter],
   data(){
     return {
-      newMenu: {
-        name: null,
-        price: null,
-        type: null
-      },
+      editFlag: true,
       typeOptions:  [
           { value: 'food', text: 'Makanan' },
           { value: 'drink', text: 'Minuman' }
@@ -232,16 +213,13 @@ export default {
   },
   methods: {
     createMenu(){
-      const name = this.newMenu.name
-      const price = this.newMenu.price
-      const type = this.newMenu.type
+      const name = this.editMenuModal.content.name
+      const price = this.editMenuModal.content.price
+      const type = this.editMenuModal.content.type
 
       return this.$store.dispatch('menus/createMenu', {name: name, price: price, type: type}) // return a promise (check store)
       .then(() => {
-        this.newMenu.name = ''
-        this.newMenu.price = ''
-        this.newMenu.type = ''
-        this.$root.$emit('bv::hide::modal', this.addMenuModal.id)
+        this.refreshAndCloseEditMenu()
       })
     },
     updateMenu(){
@@ -253,8 +231,14 @@ export default {
       }
       return this.$store.dispatch('menus/updateMenu', payload) 
       .then(() => {
-        this.$root.$emit('bv::hide::modal', this.editMenuModal.id)
+        this.refreshAndCloseEditMenu()
       })
+    },
+    refreshAndCloseEditMenu(){
+      this.editMenuModal.content.name = ''
+      this.editMenuModal.content.price = ''
+      this.editMenuModal.content.type = null
+      this.$root.$emit('bv::hide::modal', this.editMenuModal.id)
     },
     deleteMenu(){
       return this.$store.dispatch('menus/deleteMenu', this.deleteMenuModal.content.id) 
@@ -264,11 +248,17 @@ export default {
     },
     // modals methods
     setEditModal(item, index, button) {
-      this.editMenuModal.title = `Ubah menu: ${item.name}`
-      this.editMenuModal.content.key = item['.key']
-      this.editMenuModal.content.name = item.name
-      this.editMenuModal.content.type = item.type
-      this.editMenuModal.content.price = item.price
+      if(index !== null && item !== null){
+        this.editFlag = true
+        this.editMenuModal.title = `Ubah menu: ${item.name}`
+        this.editMenuModal.content.key = item['.key']
+        this.editMenuModal.content.name = item.name
+        this.editMenuModal.content.type = item.type
+        this.editMenuModal.content.price = item.price
+      }else{
+        this.editFlag = false
+        this.editMenuModal.title = `Tambah menu baru`
+      }
       this.$root.$emit('bv::show::modal', this.editMenuModal.id, button)
     },
     setAddModal(button){

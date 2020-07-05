@@ -81,18 +81,21 @@
         </template>
         <template v-slot:empty><div class="text-center col p-3">Belum ada transaksi hari ini</div></template>
         <template v-slot:emptyfiltered><div class="text-center col p-3">ID Transaksi tidak ditemukan</div></template>
-
       </b-table>
+
       <!-- Delete Transaction Modal -->
       <b-modal 
         :id="deleteTransactionModal.id" 
-        :title="deleteTransactionModal.title" 
         centered button-size="sm"
         size="md"
         okVariant= 'danger'
         headerClass= 'p-2 border-bottom-0'
         footerClass= 'p-2 border-top-0'>
         {{ deleteTransactionModal.content.text }}
+        <template v-slot:modal-header="{ close }">
+          <div class="col pt-2 pl-2"><h5>{{deleteTransactionModal.title}}</h5></div>
+          <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
+        </template>
         <template v-slot:modal-footer="{ ok, cancel }">
           <b-button size="sm" @click="cancel()">Batal</b-button>
           <b-button size="sm" variant="danger" @click="deleteTransaction()">Hapus</b-button>
@@ -100,8 +103,7 @@
       </b-modal>
       <!-- Info Transaction Modal -->
       <b-modal 
-        :id="infoTransactionModal.id" 
-        :title="infoTransactionModal.title" 
+        :id="infoTransactionModal.id"  
         button-size="sm"
         scrollable
         centered
@@ -147,6 +149,10 @@
         <div style="position: relative">
           <div style="position: absolute; right: 5px; top: -10px"><strong>Total: {{infoTransactionModal.content.income}}</strong></div>
         </div>
+        <template v-slot:modal-header="{ close }">
+          <div class="col pt-2 pl-2"><h5 class="pb-0 mb-0">{{infoTransactionModal.title}}</h5></div>
+          <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
+        </template>
         <template v-slot:modal-footer="{ ok }">
           <b-button size="sm" @click="ok()">Tutup</b-button>
         </template>
@@ -155,7 +161,6 @@
       <!-- Add Transaction Modal -->
       <b-modal 
         :id="addTransactionModal.id" 
-        :title="addTransactionModal.title" 
         button-size="sm"
         scrollable
         centered
@@ -239,6 +244,10 @@
             </tr>
           </table>
         </div>
+        <template v-slot:modal-header>
+          <div class="col pt-2 pl-2"><h5 class="pb-0 mb-0">Transaksi Baru</h5></div>
+          <button type="button" class="close" data-dismiss="modal" @click="cancelTransaction()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
+        </template>
         <template v-slot:modal-footer>
           <b-button size="sm" variant="danger" @click="cancelTransaction()">Batal</b-button>
           <b-button size="sm" variant="info" v-b-modal.modal-add-transaction-detail>Rincian</b-button>
@@ -263,7 +272,6 @@
         
       <!-- Add Transaction Detail Modal -->
       <b-modal id="modal-add-transaction-detail" 
-        title="Rincian Transaksi" 
         button-size="sm"
         scrollable
         centered
@@ -305,6 +313,10 @@
         <div style="position: relative">
           <div style="position: absolute; right: 5px; top: -10px"><strong>Total: {{totalMenus}}</strong></div>
         </div>
+        <template v-slot:modal-header="{ close }">
+          <div class="col pt-2 pl-2"><h5 class="pb-0 mb-0">Rincian Transaksi</h5></div>
+          <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
+        </template>
         <template v-slot:modal-footer="{ ok }">
           <b-button size="sm" @click="ok()">Tutup</b-button>
         </template>
