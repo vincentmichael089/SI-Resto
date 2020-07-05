@@ -69,9 +69,9 @@
           </template>
           <template v-slot:table-busy>
             <div class="text-center text-secondary my-2">
-              <b-spinner variant="secondary" class="align-middle"></b-spinner>
-              <strong>Memuat...</strong>
-            </div>
+              <div class="col"><b-spinner variant="secondary" class="align-middle"></b-spinner></div>
+              <div class="col"><strong>Memuat...</strong></div>
+          </div>
           </template>
         </b-table>
      

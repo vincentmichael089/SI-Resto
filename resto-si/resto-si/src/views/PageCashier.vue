@@ -62,7 +62,7 @@
         <template v-slot:cell(actions)="row">
           <b-button variant="info" size="sm" 
             @click="setInfoModal(row.item, row.index, $event.target)" class="mr-1">
-            <font-awesome-icon :icon="icoSearch"/>
+            <font-awesome-icon :icon="icoPeek"/>
           </b-button>
           <b-button variant="warning" size="sm" 
             @click="setEditModal(row.item, row.index, $event.target)" class="mr-1">
@@ -75,8 +75,8 @@
         </template>
           <template v-slot:table-busy>
           <div class="text-center text-secondary my-2">
-            <b-spinner variant="secondary" class="align-middle"></b-spinner>
-            <strong>Memuat...</strong>
+            <div class="col"><b-spinner variant="secondary" class="align-middle"></b-spinner></div>
+            <div class="col"><strong>Memuat...</strong></div>
           </div>
         </template>
       </b-table>
@@ -110,17 +110,17 @@
           <div class="col" style="padding-top: 4px">
             <table>
               <tr>
-                <td>Waktu Transaksi</td>
+                <td style="margin-right: 4px">Waktu Transaksi</td>
                 <td></td>
                 <td>{{toHumaneDate(infoTransactionModal.content.timestamp)}}</td>
               </tr>
               <tr>
-                <td>Kasir</td>
+                <td style="margin-right: 4px">Kasir</td>
                 <td></td>
                 <td>{{infoTransactionModal.content.cashier}}</td>
               </tr>
               <tr>
-                <td>Nomor Meja</td>
+                <td style="margin-right: 4px">Nomor Meja</td>
                 <td></td>
                 <td>{{infoTransactionModal.content.tableNumber}}</td>
               </tr>
@@ -208,7 +208,7 @@
             hover
             borderless
             head-variant="light"
-            sticky-header="40vh"
+            sticky-header="45vh"
             :items="menus"
             :fields="menusFields"
             :filter="filterMenu"
@@ -236,15 +236,64 @@
         </div>
         <template v-slot:modal-footer="{ ok, cancel }">
           <b-button size="sm" variant="danger" @click="cancel()">Batal</b-button>
-          <b-button size="sm" variant="success" @click="createTransaction()">Tambah Transaksi</b-button>
+          <b-button size="sm" variant="info" v-b-modal.modal-add-transaction-detail>Rincian</b-button>
+          <b-button size="sm" variant="success" @click="createTransaction()">Selesai</b-button>
         </template>  
+      </b-modal>
+      <!-- Add Transaction Detail Modal -->
+      <b-modal id="modal-add-transaction-detail" 
+        title="Rincian Transaksi" 
+        button-size="sm"
+        scrollable
+        centered
+        size="md"
+        headerClass= 'p-2 border-bottom-0'
+        footerClass= 'p-2 border-top-0'>
+         <div>
+          <strong>Keterangan</strong>
+          <div class="col" style="padding-top: 4px">
+            <table>
+              <tr>
+                <td style="margin-right: 4px">Kasir</td>
+                <td></td>
+                <td>{{newTransaction.cashier}}</td>
+              </tr>
+              <tr>
+                <td style="margin-right: 4px">Nomor Meja</td>
+                <td></td>
+                <td>{{newTransaction.tableNumber}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div style="padding-top: 16px"/>
+        <div>
+          <strong>Rincian Order</strong>
+          <div v-if="selectedMenus.length > 0" class="col" style="padding-top: 4px">
+            <table style="width: 100%;">
+              <tr v-for="item in selectedMenus" :key="item.key">
+                <td>{{item.qty}} x</td>
+                <td>{{item.name}}</td>
+                <td style="text-align: right;">{{toCurrencyFormat(item.qty * item.price)}}</td>
+              </tr>
+            </table>
+          </div>
+          <div v-else class="col" style="padding-top: 4px">Belum ada menu yang ditambahkan</div>
+        </div>
+        <hr>
+        <div style="position: relative">
+          <div style="position: absolute; right: 5px; top: -10px"><strong>Total: {{totalMenus}}</strong></div>
+        </div>
+        <template v-slot:modal-footer="{ ok }">
+          <b-button size="sm" @click="ok()">Tutup</b-button>
+        </template>
       </b-modal>
     </b-card>
   </div>
 </template>
 
 <script>
-import { faPlusSquare, faSearch, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faPlusSquare, faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
 import valueFormatter from '@/mixins/valueFormatter'
 
 export default {
@@ -338,15 +387,17 @@ export default {
       [...Object.values(this.menus)].map(menu => {
         totalPrice += menu.qty * menu.price
       })
-
       return this.toCurrencyFormat(totalPrice)
+    },
+    selectedMenus(){
+      return this.menus.filter(menu => menu.qty !== 0).sort((a, b) => (a.type > b.type) ? -1 : 1)
     },
     // icon loader
     icoPlus(){
       return faPlusSquare
     },
-    icoSearch(){
-      return faSearch
+    icoPeek(){
+      return faEye
     },
     icoEdit(){
       return faPen
@@ -367,8 +418,7 @@ export default {
           return obj
         }, {})
 
-      const selectedMenus = this.menus.filter(menu => menu.qty !== 0)
-      const items = arrayToObject(selectedMenus, ".key")
+      const items = arrayToObject(this.selectedMenus, ".key")
 
       return this.$store.dispatch('transactions/createTransaction', {cashier: cashier, tableNumber: tableNumber, items: items})
       .then(() => {
