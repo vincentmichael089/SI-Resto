@@ -74,11 +74,14 @@
           </b-button>
         </template>
           <template v-slot:table-busy>
-          <div class="text-center text-secondary my-2">
+          <div class="text-center text-secondary my-2 p-3">
             <div class="col"><b-spinner variant="secondary" class="align-middle"></b-spinner></div>
             <div class="col"><strong>Memuat...</strong></div>
           </div>
         </template>
+        <template v-slot:empty><div class="text-center col p-3">Belum ada transaksi hari ini</div></template>
+        <template v-slot:emptyfiltered><div class="text-center col p-3">ID Transaksi tidak ditemukan</div></template>
+
       </b-table>
       <!-- Delete Transaction Modal -->
       <b-modal 
@@ -107,30 +110,30 @@
         footerClass= 'p-2 border-top-0'>
         <div>
           <strong>Keterangan</strong>
-          <div class="col" style="padding-top: 4px">
+          <div class="col pt-2">
             <table>
               <tr>
-                <td style="margin-right: 4px">Waktu Transaksi</td>
+                <td class="mr-2">Waktu Transaksi</td>
                 <td></td>
                 <td>{{toHumaneDate(infoTransactionModal.content.timestamp)}}</td>
               </tr>
               <tr>
-                <td style="margin-right: 4px">Kasir</td>
+                <td class="mr-2">Kasir</td>
                 <td></td>
                 <td>{{infoTransactionModal.content.cashier}}</td>
               </tr>
               <tr>
-                <td style="margin-right: 4px">Nomor Meja</td>
+                <td class="mr-2">Nomor Meja</td>
                 <td></td>
                 <td>{{infoTransactionModal.content.tableNumber}}</td>
               </tr>
             </table>
           </div>
         </div>
-        <div style="padding-top: 16px"/>
+        <div class="pt-4"/>
         <div>
           <strong>Rincian Order</strong>
-          <div class="col" style="padding-top: 4px">
+          <div class="col pt-2">
             <table style="width: 100%;">
               <tr v-for="item in infoTransactionModal.content.transactionItems" :key="item.key">
                 <td>{{item.qty}} x</td>
@@ -148,6 +151,7 @@
           <b-button size="sm" @click="ok()">Tutup</b-button>
         </template>
       </b-modal>
+
       <!-- Add Transaction Modal -->
       <b-modal 
         :id="addTransactionModal.id" 
@@ -159,7 +163,7 @@
         headerClass= 'p-2 border-bottom-0'
         footerClass= 'p-2 border-top-0'>
         <!-- Table Number -->
-        <div class="col" style="padding-bottom: 4px">
+        <div class="col pb-2">
         <b-row>
           <!-- Table Number -->
           <b-col sm="6" class="my-1"> 
@@ -200,7 +204,7 @@
           </b-col>
         </b-row>
         </div>
-        <div style="height:calc(80vh - 200px)">
+        <div style="max-height:calc(80vh - 200px)">
           <!-- Table Menu-->
           <b-table
             show-empty
@@ -213,7 +217,7 @@
             :fields="menusFields"
             :filter="filterMenu"
             :filterIncludedFields="filterMenuOn"
-            style="padding-top: 4px"
+            class="pt-2"
           >
             <template v-slot:cell(qty)="row">
               <b-form-spinbutton id="sb-inline" 
@@ -221,11 +225,12 @@
                 inline/>
             </template>
             <template v-slot:table-busy>
-              <div class="text-center text-secondary my-2">
+              <div class="text-center text-secondary my-2 p-3">
                 <b-spinner variant="secondary" class="align-middle"></b-spinner>
                 <strong>Memuat...</strong>
               </div>
             </template>
+            <template v-slot:emptyfiltered><div class="text-center col  p-3">Menu yang dicari tidak ditemukan</div></template>
           </b-table>
           <hr style="margin-bottom: 1vh">
           <table style="width: 100%;" class="col">
@@ -234,12 +239,28 @@
             </tr>
           </table>
         </div>
-        <template v-slot:modal-footer="{ ok, cancel }">
-          <b-button size="sm" variant="danger" @click="cancel()">Batal</b-button>
+        <template v-slot:modal-footer>
+          <b-button size="sm" variant="danger" @click="cancelTransaction()">Batal</b-button>
           <b-button size="sm" variant="info" v-b-modal.modal-add-transaction-detail>Rincian</b-button>
           <b-button size="sm" variant="success" @click="createTransaction()">Selesai</b-button>
         </template>  
       </b-modal>
+
+      <!-- No Menu Modal -->
+      <b-modal id="modal-no-menu" 
+        title="Tidak ada menu!" 
+        button-size="sm"
+        scrollable
+        centered
+        size="sm"
+        headerClass= 'p-2 border-bottom-0'
+        footerClass= 'p-2 border-top-0'>
+          <div class="text-center col  p-3">Tidak ada menu! Tambahkan menu <span @click="navigateToPageMenu()" style="color: green; cursor: pointer;">disini</span></div>
+          <template v-slot:modal-footer="{ cancel }">
+            <b-button size="sm" variant="secondary" @click="cancel()">Tutup</b-button>
+          </template>
+      </b-modal>
+        
       <!-- Add Transaction Detail Modal -->
       <b-modal id="modal-add-transaction-detail" 
         title="Rincian Transaksi" 
@@ -251,25 +272,25 @@
         footerClass= 'p-2 border-top-0'>
          <div>
           <strong>Keterangan</strong>
-          <div class="col" style="padding-top: 4px">
+          <div class="col pt-2">
             <table>
               <tr>
-                <td style="margin-right: 4px">Kasir</td>
+                <td class="mr-4">Kasir</td>
                 <td></td>
                 <td>{{newTransaction.cashier}}</td>
               </tr>
               <tr>
-                <td style="margin-right: 4px">Nomor Meja</td>
+                <td class="mr-4">Nomor Meja</td>
                 <td></td>
                 <td>{{newTransaction.tableNumber}}</td>
               </tr>
             </table>
           </div>
         </div>
-        <div style="padding-top: 16px"/>
+        <div class="pt-4"/>
         <div>
           <strong>Rincian Order</strong>
-          <div v-if="selectedMenus.length > 0" class="col" style="padding-top: 4px">
+          <div v-if="selectedMenus.length > 0" class="col pt-2">
             <table style="width: 100%;">
               <tr v-for="item in selectedMenus" :key="item.key">
                 <td>{{item.qty}} x</td>
@@ -278,7 +299,7 @@
               </tr>
             </table>
           </div>
-          <div v-else class="col" style="padding-top: 4px">Belum ada menu yang ditambahkan</div>
+          <div v-else class="col pt-2">Belum ada menu yang ditambahkan</div>
         </div>
         <hr>
         <div style="position: relative">
@@ -429,6 +450,13 @@ export default {
         this.$root.$emit('bv::hide::modal', this.addTransactionModal.id)
       })
     },
+    cancelTransaction(){
+      this.newTransaction.tableNumber = ''
+      this.newTransaction.items = ''
+      this.filterMenu = ''
+      this.refreshMenuState()
+      this.$root.$emit('bv::hide::modal', this.addTransactionModal.id)
+    },
     deleteTransaction(){
       return this.$store.dispatch('transactions/deleteTransaction', this.deleteTransactionModal.content.id) 
       .then(() => {
@@ -437,7 +465,11 @@ export default {
     },
     // modals    
     setAddModal(button){
-      this.$root.$emit('bv::show::modal', this.addTransactionModal.id, button)
+      if(this.menus.length == 0){
+        this.$root.$emit('bv::show::modal', "modal-no-menu", button)
+      }else{
+        this.$root.$emit('bv::show::modal', this.addTransactionModal.id, button)
+      }
     },
     setInfoModal(item, index, button){
       this.infoTransactionModal.title = `Rincian Transaksi ${item.transactionId}`
@@ -452,13 +484,16 @@ export default {
     },
     refreshMenuState(){
       this.$store.dispatch('menus/setMenuQtyZero')
+    },
+    navigateToPageMenu(){
+      this.$router.push({ name: "Menu" })
     }
   },
   beforeCreate(){
     this.$store.dispatch('menus/fetchAllMenus').then(() => {
       this.refreshMenuState()
     })
-    this.$store.dispatch('transactions/fetchAllTransactions').then(() => {
+    this.$store.dispatch('transactions/fetchTodayTransactions').then(() => {
       this.isBusy = false
     })
   }

@@ -68,11 +68,13 @@
             </b-button>
           </template>
           <template v-slot:table-busy>
-            <div class="text-center text-secondary my-2">
+            <div class="text-center text-secondary my-2 p-3">
               <div class="col"><b-spinner variant="secondary" class="align-middle"></b-spinner></div>
               <div class="col"><strong>Memuat...</strong></div>
           </div>
           </template>
+          <template v-slot:empty><div class="text-center col p-3">Tambahkan menu dengan menekan tombol Tambah Menu</div></template>
+          <template v-slot:emptyfiltered><div class="text-center col p-3">Menu yang dicari tidak ditemukan</div></template>
         </b-table>
      
       <!-- Edit Menu Modal -->
@@ -110,7 +112,7 @@
           <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Jenis" label-for="input-sm">
             <b-form-select v-model="newMenu.type" :options="typeOptions">
               <template v-slot:first>
-                <b-form-select-option :value="null" disabled>-- Please select an option --</b-form-select-option>
+                <b-form-select-option :value="null" disabled>-- Pilih jenis menu --</b-form-select-option>
               </template>
             </b-form-select>
           </b-form-group>
