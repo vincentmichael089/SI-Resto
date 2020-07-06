@@ -23,6 +23,9 @@ export default {
     lastEditAt: {
       type: Number,
       required: true
+    },
+    dateFormat: {
+      type: Boolean
     }
   },
   computed: {
@@ -33,7 +36,11 @@ export default {
   },
   methods: {
     humaneDate (timestamp) {
-      return moment.unix(timestamp).format('H:m:s')
+      if(this.dateFormat){
+        return moment.unix(timestamp).format('DD-MM-YYYY H:m:s')
+      }else{
+        return moment.unix(timestamp).format('H:m:s')
+      }
     },
   }
 }

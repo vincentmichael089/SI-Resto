@@ -1,5 +1,6 @@
 import firebase from 'firebase'
 import Vue from 'vue'
+import moment from 'moment'
 
 export default{
   namespaced: true,
@@ -7,12 +8,36 @@ export default{
     items: {}
   },
   actions: {
-    fetchTodayTransactions(context){
+    fetchTimedTransactions(context, {flag}){
       return new Promise((resolve) => {
-        const today = new Date()
-        const startTime = Number(Math.floor(today.setHours(0,0,0,0)/1000))
-        const endTime = Number(Math.floor(today.setHours(24,0,0,0)/1000))
+       // const today = new Date()
+        let startTime
+        const endTime =  Number(moment().endOf('day').unix())
+        switch(flag) {
+          case 0: // today
+            startTime = Number(moment().startOf('day').unix())
+            break;
+          case 1: // last 1 week 
+            startTime = Number(moment().subtract(1, 'weeks').unix())
+            break;
+          case 2: // last 1 month
+            startTime = Number(moment().subtract(1, 'months').unix())
+            break;
+          case 3: // last 3 month
+            startTime = Number(moment().subtract(3, 'months').unix())
+            break;
+          case 4: // last 6 month
+            startTime = Number(moment().subtract(6, 'months').unix())
+            break;
+          case 5: // last 1 year
+            startTime = Number(moment().subtract(1, 'years').unix())
+            break;
+          default:
+            // code block
+        }
 
+        context.state.items = {}
+        
         firebase.database().ref('transactions').orderByChild("timestamp").startAt(startTime).endAt(endTime)
         .once('value', snapshot => {
           const transactionsObject = snapshot.val()

@@ -515,7 +515,7 @@ export default {
         this.editTransactionModal.content.cashier = item.cashier
         this.editTransactionModal.content.tableNumber = item.tableNumber
 
-        this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', item.key)
+        this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', {id:item.key, flag: 0})
         this.$root.$emit('bv::show::modal', this.editTransactionModal.id, button)
       }else{
         this.editFlag = false
@@ -549,7 +549,7 @@ export default {
     this.$store.dispatch('menus/fetchAllMenus').then(() => {
       this.refreshMenuState()
     })
-    this.$store.dispatch('transactions/fetchTodayTransactions').then(() => {
+    this.$store.dispatch('transactions/fetchTimedTransactions', {flag: 0}).then(() => {
       this.isBusy = false
     })
   }
