@@ -472,7 +472,6 @@ export default {
       })
     },
     cancelTransaction(){
-      console.log("x clicked")
       this.editTransactionModal.content.tableNumber = ''
       this.editTransactionModal.content.items = ''
       this.filterMenu = ''

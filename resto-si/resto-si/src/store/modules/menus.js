@@ -56,14 +56,18 @@ export default{
     },
     fetchAllMenusModifiedByTransactionId(context, id){
       return new Promise((resolve) => {
-        const transactions = {...context.rootState.transactions.items}
-        const transactionId = Object.keys(transactions).filter(item => item === id)
-        const transactionMenus = transactions[transactionId].items
-        Object.keys(transactionMenus).forEach(menuId => {
-          const menu = transactionMenus[menuId]
-          context.commit('setItem', {resource: 'menus', id: menuId, item: menu}, {root: true})
+        context.dispatch('transactions/fetchTodayTransactions', null, {root: true})
+        .then(() => {
+          const transactions = {...context.rootState.transactions.items}
+          const transactionId = Object.keys(transactions).filter(item => item === id)
+          const transactionMenus = transactions[transactionId].items
+          // fetch dari firebase biar ga ngaruh?
+          Object.keys(transactionMenus).forEach(menuId => {
+            const menu = transactionMenus[menuId]
+            context.commit('setItem', {resource: 'menus', id: menuId, item: menu}, {root: true})
+          })
+          resolve(Object.values(context.state.items))
         })
-        resolve(context.state.items)
       })
     },
     setMenuQtyZero(context){
