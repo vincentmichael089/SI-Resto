@@ -12,10 +12,11 @@
       <b-list-group>
         <b-list-group-item 
           v-for="route in routes"
-          @click.prevent="navigateAndDisable($event, route)"
           :key="route.slug" 
           :to="{ name: route.slug }"
-          class="sidebar-item sidebar-route">{{route.name}}
+          class="sidebar-item sidebar-route">
+          
+          {{route.name}}
           </b-list-group-item>
       </b-list-group>
     </b-sidebar>
@@ -54,20 +55,12 @@ export default {
       appname: process.env.FIREBASE_PROJECT_ID
     }
   },
-  methods: {
-    navigateAndDisable(event){
-      const sidebarRoute = document.getElementsByClassName("sidebar-route")
-      for (let i = 0; i < sidebarRoute.length; i++) {
-        sidebarRoute[i].className = sidebarRoute[i].className.replace("sidebar-route-act", ""); 
-      }
-      event.currentTarget.className += "active disabled sidebar-route-act";
-    }
-  },
+  methods: {},
   computed: {
     bars(){
       return faBars
     }
-  }
+  },
 }
 </script>
 
@@ -76,8 +69,10 @@ export default {
     background-color: #08f26d17;
   }
 
-  .sidebar-route-act {
+  .active-menu {
     background-color: #08f26d3b;
+    color: black;
+    border-color: #08f26d00;
   }
 
   .burgerbar {
@@ -87,5 +82,6 @@ export default {
     border: none;
     outline:none;
   }
+
 </style>>
 

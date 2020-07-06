@@ -40,7 +40,8 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  linkExactActiveClass: "active disabled active-menu", // set design of active class (reactive navbar)
 })
 
 export default router
