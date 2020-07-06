@@ -9,7 +9,7 @@
       style="margin: 1rem;"
       class="mb-2 ">
       <template v-slot:header>
-        <b-col class="my-1 pl-0 mr-0"><strong>Total Pemasukan: {{dailyIncome}}</strong></b-col>
+        <b-col class="my-1 pl-0 mr-0"><strong>{{timeOptionsText}} : {{dailyIncome}}</strong></b-col>
         <b-row>
           <b-col lg="6" class="my-1">
             <b-form-group
@@ -165,7 +165,7 @@ export default {
         { key: 'actions', label: '', class: 'text-center' },
       ],
       timeOptions: [
-        { value: null, text: '-- Pilih rentang waktu--' },
+        { value: null, text: '-- Pilih rentang waktu--', disabled: true },
         { value: 0, text: 'Hari ini' },
         { value: 1, text: '1 Minggu terakhir' },
         { value: 2, text: '1 Bulan terakhir' },
@@ -225,7 +225,24 @@ export default {
       })
       return this.toCurrencyFormat(dailyIncome)
     },
-
+    timeOptionsText(){
+      switch(this.timeFlag){
+        case 0: // today
+          return 'Total Pemasukan Hari Ini'
+        case 1: // last 1 week 
+          return 'Total Pemasukan 1 Minggu Terakhir'
+        case 2: // last 1 month
+          return 'Total Pemasukan 1 Bulan Terakhir'
+        case 3: // last 3 month
+          return 'Total Pemasukan 3 Bulan Terakhir'
+        case 4: // last 6 month
+          return 'Total Pemasukan 6 Bulan Terakhir'
+        case 5: // last 1 year
+          return 'Total Pemasukan 1 Tahun Terakhir'
+        default:
+          return ''
+      }
+    },
     // icon loader
     icoPlus(){
       return faPlusSquare
