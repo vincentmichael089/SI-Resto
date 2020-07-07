@@ -10,6 +10,40 @@
       variant="success"
       @click="setEditModal(null, null, $event.target)"><font-awesome-icon :icon="icoPlus"/> Transaksi Baru </b-button>
     </div>
+
+    <!-- Card Active Transactions -->
+    <div class="row col pt-2 card-columns">
+      <div v-for="transaction in activeTransactions"
+      :key="transaction.key"
+      class="col-lg-3 col-md-4 col-sm-6" 
+      style="margin-bottom:10px;">
+        <b-card 
+          bg-variant="light" header="Light"  header-tag="header"
+          style="width: 100%"
+          headerClass= 'p-2 border-bottom-0'
+          footerClass= 'p-2 border-top-0'>
+          <div  class="p-0 m-0">
+            <table style="width: 100%;">
+              <tr v-for="item in transaction.transactionItems" :key="item.key">
+                <td style="text-align: left;">{{item.qty}}</td>
+                <td>{{item.name}}</td>
+                <td style="text-align: right;">{{toCurrencyFormat(item.qty * item.price)}}</td>
+              </tr>
+            </table>
+          </div>
+          <template v-slot:header>
+            <strong class="mb-0">Meja {{transaction.tableNumber}}</strong>
+          </template>
+          <template v-slot:footer>
+            <div class="row p-0 m-0 text-center">
+              <b-button size="sm" variant="secondary" class="col" @click="setEditModal(transaction, -1, $event.target)">Ubah</b-button>
+              <b-button size="sm" variant="success" class="col" @click="setInfoModal(transaction, transaction.key, $event.target)">Selesai</b-button>
+            </div>
+          </template>
+        </b-card>
+      </div>
+    </div>
+
     <b-card  
       header-tag="header"  
       style="margin: 1rem;"
@@ -101,6 +135,26 @@
           <b-button size="sm" variant="danger" @click="deleteTransaction()">Hapus</b-button>
         </template>
       </b-modal>
+
+      <!-- Finish Transaction Modal -->
+      <b-modal 
+        id="finish-transaction-modal" 
+        centered button-size="sm"
+        size="sm"
+        okVariant= 'danger'
+        headerClass= 'p-2 border-bottom-0'
+        footerClass= 'p-2 border-top-0'>
+        <div>Selesaikan transaksi?</div>
+        <template v-slot:modal-header="{ close }">
+          <div class="col pt-2 pl-2"><h5 h5 class="pb-0 mb-0">Konfirmasi</h5></div>
+          <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
+        </template>
+        <template v-slot:modal-footer="{ ok, cancel }">
+          <b-button size="sm" @click="cancel()">Batal</b-button>
+          <b-button size="sm" variant="success" @click="finishTransaction()">Selesai</b-button>
+        </template>
+      </b-modal>
+
       <!-- Info Transaction Modal -->
       <b-modal 
         :id="infoTransactionModal.id"  
@@ -155,6 +209,7 @@
         </template>
         <template v-slot:modal-footer="{ ok }">
           <b-button size="sm" @click="ok()">Tutup</b-button>
+          <b-button size="sm" @click="setFinishModal()" variant="success">Selesai</b-button>
         </template>
       </b-modal>
 
@@ -252,7 +307,7 @@
           <b-button size="sm" variant="danger" @click="cancelTransaction()">Batal</b-button>
           <b-button size="sm" variant="info" v-b-modal.modal-add-transaction-detail>Rincian</b-button>
           <b-button v-show="editFlag" size="sm" variant="success" @click="updateTransaction()">Simpan</b-button>
-          <b-button v-show="!editFlag" size="sm" variant="success" @click="createTransaction()">Selesai</b-button>
+          <b-button v-show="!editFlag" size="sm" variant="success" @click="createTransaction()">Tambah</b-button>
         </template>  
       </b-modal>
 
@@ -336,10 +391,14 @@ export default {
   data(){
     return{
       editFlag: true,
+      transactionIdHolder: null,
       fields: [
         { key: 'transactionId', label: 'ID Transaksi', class: 'text-center', sortable: true },
         { key: 'timestamp', label: 'Waktu Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc'},
         { key: 'income', label: 'Pemasukan', class: 'text-center', sortable: true },
+        { key: 'active', label: 'Status Transaksi', class:'text-center', sortable: true, formatter: (value) => {
+          return value ? 'Belum Selesai' : 'Selesai'
+        } },
         { key: 'actions', label: '', class: 'text-center' },
       ],
       menusFields: [
@@ -405,13 +464,17 @@ export default {
           timestamp: transaction.timestamp,
           lastEditAt:transaction.lastEditAt,
           transactionItems: transaction.items,
+          active: transaction.active,
           income: this.toCurrencyFormat(sum),
         }
       })
     },
+    activeTransactions(){
+      return this.transactions.filter(transaction => transaction.active === true).sort((a, b) => (a.timestamp > b.timestamp) ? -1 : 1)
+    },
     dailyIncome(){
       let dailyIncome = 0;
-      [...Object.values(this.$store.state.transactions.items)].map(transaction => {
+      [...Object.values(this.$store.state.transactions.items)].filter(transaction => transaction.active === false).map(transaction => {
         if(transaction.items){
           const transactionItems = [...Object.values(transaction.items)]
           transactionItems.forEach(item => {
@@ -506,6 +569,13 @@ export default {
           this.$root.$emit('bv::hide::modal', this.editTransactionModal.id)
         })
     },
+    finishTransaction(){
+      return this.$store.dispatch('transactions/finishTransaction', {id: this.transactionIdHolder})
+      .then(() => {
+        this.$root.$emit('bv::hide::modal', "finish-transaction-modal")
+        this.$root.$emit('bv::hide::modal', this.infoTransactionModal.id)
+      })
+    },
     // modals    
     setEditModal(item, index, button){
       if(item !== null && index !== null){
@@ -528,6 +598,7 @@ export default {
       }
     },
     setInfoModal(item, index, button){
+      this.transactionIdHolder = index,
       this.infoTransactionModal.title = `Rincian Transaksi ${item.transactionId}`
       this.infoTransactionModal.content = item
       this.$root.$emit('bv::show::modal', this.infoTransactionModal.id, button)
@@ -537,6 +608,9 @@ export default {
       this.deleteTransactionModal.content.text = `Apakah anda yakin ingin menghapus transaksi ${item.transactionId} ?`
       this.deleteTransactionModal.content.id = item.key
       this.$root.$emit('bv::show::modal', this.deleteTransactionModal.id, button)
+    },
+    setFinishModal(button){
+      this.$root.$emit('bv::show::modal', "finish-transaction-modal", button)
     },
     refreshMenuState(){
       this.$store.dispatch('menus/setMenuQtyZero')
@@ -556,6 +630,13 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.card-columns {
+  @include media-breakpoint-only(lg) {
+    column-count: 4;
+  }
+  @include media-breakpoint-only(xl) {
+    column-count: 5;
+  }
+}
 </style>

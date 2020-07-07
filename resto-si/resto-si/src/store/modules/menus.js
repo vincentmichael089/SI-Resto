@@ -42,6 +42,7 @@ export default{
     },
     fetchAllMenus(context){
       return new Promise((resolve) => {
+        Vue.delete(context.state.items)
         firebase.database().ref('menus').once('value', snapshot => {
           const menusObject = snapshot.val()
           if(menusObject){

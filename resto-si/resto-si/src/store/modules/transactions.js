@@ -37,7 +37,7 @@ export default{
         }
 
         context.state.items = {}
-        
+
         firebase.database().ref('transactions').orderByChild("timestamp").startAt(startTime).endAt(endTime)
         .once('value', snapshot => {
           const transactionsObject = snapshot.val()
@@ -69,7 +69,8 @@ export default{
       const transactionId = firebase.database().ref('transactions').push().key
       const timestamp = Math.floor(Date.now() / 1000)
       const lastEditAt = Math.floor(Date.now() / 1000)
-      const transaction = { cashier, tableNumber, items, timestamp, lastEditAt}
+      const active = true
+      const transaction = { cashier, tableNumber, items, timestamp, lastEditAt, active}
 
       const updates = {}
       updates[`transactions/${transactionId}`] = transaction
@@ -92,6 +93,18 @@ export default{
         firebase.database().ref('transactions').child(id).update(updates)
         .then(() => {
           context.commit('setItem', {resource: 'transactions', item: {...transaction, lastEditAt: lastEditAt, tableNumber: newTableNumber, items: newItems}, id:id},{root: true})
+          resolve()
+        })
+      }) 
+    },
+    finishTransaction(context, {id}){
+      return new Promise((resolve) => {
+        const transaction = context.state.items[id]
+        const updates = {}
+        updates.active = false
+        firebase.database().ref('transactions').child(id).update(updates)
+        .then(() => {
+          context.commit('setItem', {resource: 'transactions', item: {...transaction, active: false}, id:id},{root: true})
           resolve()
         })
       })
