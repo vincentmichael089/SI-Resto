@@ -5,6 +5,8 @@ import Menu from '../views/PageMenu.vue'
 import Recap from '../views/PageRecap.vue'
 import Insight from '../views/PageInsight.vue'
 import Cashier from '../views/PageCashier.vue'
+import CashierTransactionActive from '../components/CashierTransactionActive.vue'
+import CashierTransactionHistory from '../components/CashierTransactionHistory.vue'
 
 Vue.use(VueRouter)
 
@@ -31,8 +33,19 @@ Vue.use(VueRouter)
   },
   {
     path: '/cashier',
-    name: 'Cashier',
-    component: Cashier
+    component: Cashier,
+    children: [
+      {
+        path: '/history',
+        name: 'CashierTransactionHistory',
+        component: CashierTransactionHistory
+      },
+      {
+        path: '',
+        name: 'CashierTransactionActive',
+        component: CashierTransactionActive
+      },
+    ]
   }
 
 ]

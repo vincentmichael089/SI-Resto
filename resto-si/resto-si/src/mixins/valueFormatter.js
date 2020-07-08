@@ -11,6 +11,9 @@ export default {
     
     toHumaneDate(number){
       return moment.unix(number).format('DD-MM-YYYY (h:m:s a)')
+    },
+    toHumaneDateHMS(number){
+      return moment.unix(number).format('HH:m:s')
     }
   }
 }

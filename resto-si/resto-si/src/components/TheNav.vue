@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sticky">
     <button v-b-toggle.sidebar-backdrop class="burgerbar">
       <font-awesome-icon :icon="bars"/> SIRESTO
     </button>
@@ -32,15 +32,15 @@ export default {
     return {
       routes: [
         {
-          name: 'Home',
+          name: 'Beranda',
           slug: 'Home'
         },
         {
-          name: 'Cashier',
-          slug: 'Cashier'
+          name: 'Kasir',
+          slug: 'CashierTransactionActive'
         },
         {
-          name: 'Recap',
+          name: 'Riwayat Transaksi',
           slug: 'Recap'
         },
         {
@@ -48,7 +48,7 @@ export default {
           slug: 'Insight'
         },
         {
-          name: 'Menu Editor',
+          name: 'Pengaturan Menu',
           slug: 'Menu'
         }
       ],
@@ -83,5 +83,12 @@ export default {
     outline:none;
   }
 
+  div.sticky {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: white;
+  }
 </style>>
 
