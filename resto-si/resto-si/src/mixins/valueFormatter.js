@@ -10,7 +10,6 @@ export default {
       .replace("IDR", "Rp")
       .replace(",", "?").replace(".", ",").replace("?", ".")
     },
-    
     toHumaneDate(number){
       return moment.unix(number).format('D-MM-YYYY (H:MM:SS)')
     },

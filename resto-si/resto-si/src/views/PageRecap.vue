@@ -9,7 +9,7 @@
       style="margin: 1rem;"
       class="mb-2 ">
       <template v-slot:header>
-        <b-col class="my-1 pl-0 mr-0"><strong>{{timeOptionsText}} : {{income}}</strong></b-col>
+        <b-col class="my-1 pl-0 mr-0"><strong>{{timeOptionsText}} : {{toCurrencyFormat(income)}}</strong></b-col>
         <b-row>
           <b-col lg="6" class="my-1">
             <b-form-group
@@ -326,6 +326,7 @@
 <script>
 import { faPlusSquare, faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
 import valueFormatter from '@/mixins/valueFormatter'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'Recap',
@@ -395,6 +396,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      income: 'transactions/transactionsIncomeTotal'
+    }),
     transactions(){
       return [...Object.values(this.$store.state.transactions.items)].map(transaction => {
         let sum = 0;
@@ -429,18 +433,6 @@ export default {
     },
     selectedMenus(){
       return this.menus.filter(menu => menu.qty !== 0).sort((a, b) => (a.type > b.type) ? -1 : 1)
-    },
-    income(){
-      let income = 0;
-      [...Object.values(this.$store.state.transactions.items)].filter(transaction => transaction.active === false).map(transaction => {
-        if(transaction.items){
-          const transactionItems = [...Object.values(transaction.items)]
-          transactionItems.forEach(item => {
-            income += item.qty * item.price
-          });
-        }
-      })
-      return this.toCurrencyFormat(income)
     },
     timeOptionsText(){
       switch(this.timeFlag){

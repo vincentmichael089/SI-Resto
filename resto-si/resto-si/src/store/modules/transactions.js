@@ -7,6 +7,37 @@ export default{
   state: {
     items: {}
   },
+  getters: {
+    transactionsIncomeTotal(state){
+      let income = 0;
+      [...Object.values(state.items)].filter(transaction => transaction.active === false).map(transaction => {
+        if(transaction.items){
+          const transactionItems = [...Object.values(transaction.items)]
+          transactionItems.forEach(item => {
+            income += item.qty * item.price
+          });
+        }
+      })
+      return income
+    },
+    transactionsIncomeTimed(state){
+      return [...Object.values(state.items)].map(transaction => {
+        let sum = 0;
+
+        if(transaction.items){
+          [...Object.values(transaction.items)].forEach(item => {
+            sum += item.qty * item.price
+          });
+        }
+        
+        return { 
+          key: transaction['.key'],
+          timestamp: transaction.timestamp,
+          income: sum,
+        }
+      })
+    }
+  },
   actions: {
     fetchTimedTransactions(context, {flag}){
       return new Promise((resolve) => {

@@ -6,7 +6,7 @@
       class="mb-2 ">
       <template v-slot:header>
         <b-row>
-          <b-col lg="6" class="my-1"><strong>Total Pemasukan Hari Ini: {{dailyIncome}}</strong></b-col>
+          <b-col lg="6" class="my-1"><strong>Total Pemasukan Hari Ini: {{toCurrencyFormat(dailyIncome)}}</strong></b-col>
           <!-- Search bar -->
           <b-col lg="6" class="my-1">  
             <b-form-group
@@ -342,6 +342,7 @@
 <script>
 import { faPlusSquare, faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
 import valueFormatter from '@/mixins/valueFormatter'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'CashierTransactionHistory',
@@ -406,6 +407,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      dailyIncome: 'transactions/transactionsIncomeTotal'
+    }),
     transactions(){
       return [...Object.values(this.$store.state.transactions.items)].map(transaction => {
         let sum = 0;
@@ -431,18 +435,6 @@ export default {
     },
     activeTransactions(){
       return this.transactions.filter(transaction => transaction.active === true).sort((a, b) => (a.timestamp > b.timestamp) ? -1 : 1)
-    },
-    dailyIncome(){
-      let dailyIncome = 0;
-      [...Object.values(this.$store.state.transactions.items)].filter(transaction => transaction.active === false).map(transaction => {
-        if(transaction.items){
-          const transactionItems = [...Object.values(transaction.items)]
-          transactionItems.forEach(item => {
-            dailyIncome += item.qty * item.price
-          });
-        }
-      })
-      return this.toCurrencyFormat(dailyIncome)
     },
     menus(){
       return [...Object.values(this.$store.state.menus.items)]
