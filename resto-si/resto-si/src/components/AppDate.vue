@@ -37,9 +37,9 @@ export default {
   methods: {
     humaneDate (timestamp) {
       if(this.dateFormat){
-        return moment.unix(timestamp).format('DD-MM-YYYY H:m:s')
+        return moment.unix(timestamp).format('D MMMM YYYY H:MM:SS')
       }else{
-        return moment.unix(timestamp).format('H:m:s')
+        return moment.unix(timestamp).format('H:MM:SS')
       }
     },
   }

@@ -1,4 +1,6 @@
 import moment from 'moment'
+import 'moment/locale/id'  // without this line it didn't work
+moment.locale('id')
 
 export default {  
   methods: {
@@ -10,10 +12,13 @@ export default {
     },
     
     toHumaneDate(number){
-      return moment.unix(number).format('DD-MM-YYYY (h:m:s a)')
+      return moment.unix(number).format('D-MM-YYYY (H:MM:SS)')
+    },
+    toHumaneDateIdn(number){
+      return moment.unix(number).format('D MMMM YYYY H:MM:SS')
     },
     toHumaneDateHMS(number){
-      return moment.unix(number).format('HH:m:s')
+      return moment.unix(number).format('H:MM:SS')
     }
   }
 }

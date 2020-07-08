@@ -32,7 +32,7 @@
           <!-- Search bar -->
           <b-col lg="6" class="my-1">  
             <b-form-group
-              label='ID Transaksi'
+              label='Cari Transaksi'
               label-cols-lg="3"
               label-align-lg="right"
               label-size="sm"
@@ -44,7 +44,7 @@
                   v-model="filter"
                   type="search"
                   id="filterInput"
-                  placeholder="Cari ID transaksi..."
+                  placeholder="ID / tanggal transaksi..."
                 ></b-form-input>
               </b-input-group>
             </b-form-group>
@@ -335,7 +335,9 @@ export default {
       timeFlag: 1,
       fields: [
         { key: 'transactionId', label: 'ID Transaksi', class: 'text-center', sortable: true },
-        { key: 'timestamp', label: 'Waktu Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc', filterByFormatted: true},
+        { key: 'timestamp', label: 'Waktu Transaksi', class: 'text-center', sortable: true, sortDirection: 'desc', filterByFormatted: true,
+          formatter: this.toHumaneDateIdn
+        },
         { key: 'income', label: 'Pemasukan', class: 'text-center', sortable: true },
         { key: 'actions', label: '', class: 'text-center' },
       ],
