@@ -7,6 +7,7 @@ import AppDate from '@/components/AppDate'
 import router from './router'
 import store from './store'
 import firebase from 'firebase'
+import VueApexCharts from 'vue-apexcharts'
 
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
 
@@ -14,6 +15,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)
 Vue.component('font-awesome-layers-text', FontAwesomeLayersText)
 Vue.component('AppDate', AppDate)
+Vue.component('apexchart', VueApexCharts)
 
 Vue.config.productionTip = false
 

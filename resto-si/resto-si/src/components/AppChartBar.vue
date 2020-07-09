@@ -1,6 +1,6 @@
 <template>
   <div>
-    <apexchart width="100%" type="area" :options="options" :series="series"></apexchart>
+    <apexchart width="100%" type="bar" :options="options" :series="series"></apexchart>
   </div>
 </template>
 
@@ -20,8 +20,7 @@ export default {
     return {
       options: {
         chart: {
-          id: 'chart-income',
-          type: 'area',
+          id: 'chart-visitor',
           zoom: {
             enabled: false
           }
@@ -29,13 +28,9 @@ export default {
         xaxis: {
           type: 'datetime'
         },
-        yaxis: {
-          labels: {
-            formatter: this.toCurrencyFormat
-          },
-        },
+        yaxis: {},
         dataLabels: {
-          enabled: false
+          enabled: true
         },
         stroke: {
           curve: 'straight',
@@ -45,11 +40,11 @@ export default {
         }
       },
       series: [{
-        name: "Pemasukan",
+        name: "Pengunjung",
         data: [...this.data].map(datum => {
           return {
             x: datum.timestamp,
-            y: datum.income
+            y: datum.visitor
           }
         })
       }],
@@ -62,12 +57,11 @@ export default {
   },
   methods: { 
     updateChart(){
-      console.log('event fired')
       this.series = [{
         data: [...this.data].map(datum => {
           return {
             x: datum.timestamp,
-            y: datum.income
+            y: datum.visitor
           }
         })
       }]

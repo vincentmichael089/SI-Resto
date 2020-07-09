@@ -34,6 +34,7 @@ export default{
           key: transaction['.key'],
           timestamp: transaction.timestamp,
           income: sum,
+          date: transaction.date
         }
       })
     }
@@ -100,8 +101,53 @@ export default{
       const transactionId = firebase.database().ref('transactions').push().key
       const timestamp = Math.floor(Date.now() / 1000)
       const lastEditAt = Math.floor(Date.now() / 1000)
+
+      let month
+      const dumbMonth = Number(moment.unix(timestamp).format('MM'))
+      switch(dumbMonth){
+        case 0:
+          month = '00'
+          break;
+        case 1:
+          month = '01'
+          break;
+        case 2:
+          month = '02'
+          break;
+        case 3:
+          month = '03'
+          break;      
+        case 4:
+          month = '04'
+          break;
+        case 5:
+          month = '05'
+          break;
+        case 6:
+          month = '06'
+          break;
+        case 7:
+          month = '07'
+          break;    
+        case 8:
+          month = '08'
+          break;      
+        case 9:
+          month = '09'
+          break;
+        case 10:
+          month = '10'
+          break;    
+        case 11:
+          month = '11'
+          break;      
+        case 12:
+          month = '12'
+          break;       
+      }
+      const date = ''+moment.unix(timestamp).format('YYYY-')+month+moment.unix(timestamp).format('-DD')
       const active = true
-      const transaction = { cashier, tableNumber, items, timestamp, lastEditAt, active}
+      const transaction = { cashier, tableNumber, items, timestamp, lastEditAt, active, date}
 
       const updates = {}
       updates[`transactions/${transactionId}`] = transaction
