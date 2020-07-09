@@ -8,27 +8,33 @@
     style="margin: 1rem;"
     class="mb-2 ">
       <template v-slot:header>
-          <b-col lg="6" class="my-1">
-            <b-form-group
-              label="Rentang waktu"
-              label-cols-lg="3"
-              label-align-lg="right"
-              label-size="sm"
-              label-for="initialSortSelect"
-              class="mb-0"
-            >
-              <b-form-select
-                @change="getTransactionsInTimeSpan()"
-                v-model="timeFlag"
-                id="initialSortSelect"
-                size="sm"
-                :options="timeOptions"
-              ></b-form-select>
-            </b-form-group>
-          </b-col>
+        <table style="width: 100%">
+          <tr>
+            <td>
+              <div>
+                <h5><b>Laporan Penjualan</b></h5>
+                <small>Periode {{startDate}} - {{endDate}}</small>
+              </div>
+            </td>
+            <td style="text-align: right;">
+              <div>
+                <b-button-group size="sm">
+                  <b-button @click="getTransactionsInTimeSpan(0)">Hari</b-button>
+                  <b-button @click="getTransactionsInTimeSpan(1)">Minggu</b-button>
+                  <b-dropdown right text="Bulan" size="sm">
+                    <b-dropdown-item @click="getTransactionsInTimeSpan(2)">1 Bulan</b-dropdown-item>
+                    <b-dropdown-item @click="getTransactionsInTimeSpan(3)">3 Bulan</b-dropdown-item>
+                    <b-dropdown-item @click="getTransactionsInTimeSpan(4)">6 Bulan</b-dropdown-item>
+                  </b-dropdown>
+                  <b-button @click="getTransactionsInTimeSpan(5)">Tahun</b-button>
+                </b-button-group>
+              </div>
+            </td>
+          </tr>
+        </table>
       </template>
       <div class="container">
-        <InsightHeader/>
+        <InsightHeader :totalIncome="toCurrencyFormat(income)" :totalVisitor="transactionsIncomeByTime.length"/>
         <div class="row pt-4">
           <div class="col-md-6">
             <strong>Pendapatan {{chartTitle}}</strong>
@@ -45,10 +51,12 @@
 </template>
 
 <script>
+import valueFormatter from '@/mixins/valueFormatter'
 import AppChartLine from '@/components/AppChartLine.vue'
 import AppChartBar from '@/components/AppChartBar.vue'
 import InsightHeader from '@/components/InsightHeader.vue'
 import {mapGetters} from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'Insight',
@@ -57,24 +65,17 @@ export default {
     AppChartLine,
     AppChartBar
   },
+  mixins: [valueFormatter],
   data(){
     return {
       isBusy: true,
-      timeFlag: 1,
-      timeOptions: [
-        { value: null, text: '-- Pilih rentang waktu--', disabled: true },
-        { value: 0, text: 'Hari Ini' }, //for chart debug
-        { value: 1, text: '1 Minggu terakhir' },
-        { value: 2, text: '1 Bulan terakhir' },
-        { value: 3, text: '3 Bulan terakhir' },
-        { value: 4, text: '6 Bulan terakhir' },
-        { value: 5, text: '1 Tahun terakhir' }
-      ],
+      timeFlag: 1
     }
   },
   computed: {
     ...mapGetters({
-      transactionsIncomeByTime: 'transactions/transactionsIncomeTimed'
+      transactionsIncomeByTime: 'transactions/transactionsIncomeTimed',
+      income: 'transactions/transactionsIncomeTotal'
     }),
     chartData(){
       const dup = [...Object.values({...this.transactionsIncomeByTime})].reduce((res, obj) => {
@@ -113,12 +114,41 @@ export default {
       }
 
       return title
+    },
+    startDate(){
+      let startDate
+
+      switch(this.timeFlag){
+        case 0: 
+          startDate = moment().startOf('day').format('D MMMM YYYY')
+          break;
+        case 1:
+          startDate = moment().subtract(1, 'weeks').format('D MMMM YYYY')
+          break;
+        case 2: 
+          startDate = moment().subtract(1, 'months').format('D MMMM YYYY')
+          break;
+        case 3:
+          startDate = moment().subtract(3, 'months').format('D MMMM YYYY')
+          break;
+        case 4: 
+          startDate = moment().subtract(6, 'months').format('D MMMM YYYY')
+          break;      
+        case 5: 
+          startDate = moment().subtract(1, 'years').format('D MMMM YYYY')
+          break;                                  
+      }
+      return startDate
+    },
+    endDate(){
+      return moment().endOf('day').format('D MMMM YYYY')
     }
   },
   methods: {
-    getTransactionsInTimeSpan(){
+    getTransactionsInTimeSpan(flag){
       this.isBusy = true
-      this.$store.dispatch('transactions/fetchTimedTransactions', {flag: this.timeFlag}).then(() => {
+      this.timeFlag = flag
+      this.$store.dispatch('transactions/fetchTimedTransactions', {flag: flag}).then(() => {
         this.isBusy = false
       })
     }

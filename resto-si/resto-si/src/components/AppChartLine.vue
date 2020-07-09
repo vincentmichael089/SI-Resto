@@ -62,7 +62,6 @@ export default {
   },
   methods: { 
     updateChart(){
-      console.log('event fired')
       this.series = [{
         data: [...this.data].map(datum => {
           return {

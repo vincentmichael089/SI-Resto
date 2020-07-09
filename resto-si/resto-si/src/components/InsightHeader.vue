@@ -1,12 +1,12 @@
 <template>
-  <div class="row">
+  <div class="row pb-2">
     <div class="col-lg-4 col-md-6 col-sm-6 pt-3">     
       <b-card bg-variant="success" text-variant="white" header="Total Pendapatan"
         style="width: 100%"
         headerClass= 'pl-2 pt-2 pr-2 pb-1 border-bottom-0'
         bodyClass= 'p-3'
         footerClass= 'p-0 border-top-0'>
-        <b-card-text>Lorem ipsum </b-card-text>
+        <b-card-text>{{totalIncome}}</b-card-text>
       </b-card>
     </div>
     <div class="col-lg-4 col-md-6 col-sm-6 pt-3">     
@@ -15,7 +15,7 @@
         headerClass= 'pl-2 pt-2 pr-2 pb-1 border-bottom-0'
         bodyClass= 'p-3'
         footerClass= 'p-0 border-top-0'>
-        <b-card-text>Lorem ipsum</b-card-text>
+        <b-card-text>{{totalVisitor}}</b-card-text>
       </b-card>
     </div>
     <div class="col-lg-4 col-md-6 col-sm-6 pt-3">     
@@ -41,7 +41,23 @@
 
 <script>
 export default {
-  name: 'InsightHeader'
+  name: 'InsightHeader',
+  props: {
+    totalIncome: {
+      type: String,
+      required: true
+    },
+    totalVisitor: {
+      type: Number,
+      required: true
+    },
+    totalFoodSold: {
+      type: Number
+    },
+    totalDrinkSold: {
+      type: Number
+    }
+  }
 }
 </script>
 

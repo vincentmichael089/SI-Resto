@@ -23,10 +23,16 @@ export default{
     transactionsIncomeTimed(state){
       return [...Object.values(state.items)].map(transaction => {
         let sum = 0;
-
+        let foods = 0;
+        let drinks = 0
         if(transaction.items){
           [...Object.values(transaction.items)].forEach(item => {
             sum += item.qty * item.price
+            if(item.type === 'food'){
+              foods +=1
+            }else if(item.type === 'drinks'){
+              drinks +=1
+            }
           });
         }
         
@@ -34,6 +40,8 @@ export default{
           key: transaction['.key'],
           timestamp: transaction.timestamp,
           income: sum,
+          countFoods: foods,
+          countDrinks: drinks,
           date: transaction.date
         }
       })
