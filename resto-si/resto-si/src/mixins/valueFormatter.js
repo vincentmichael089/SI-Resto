@@ -11,13 +11,13 @@ export default {
       .replace(",", "?").replace(".", ",").replace("?", ".")
     },
     toHumaneDate(number){
-      return moment.unix(number).format('D-MM-YYYY (H:MM:SS)')
+      return moment.unix(number).format('D-MM-YYYY (H:mm:ss)')
     },
     toHumaneDateIdn(number){
-      return moment.unix(number).format('D MMMM YYYY H:MM:SS')
+      return moment.unix(number).format('D MMMM YYYY H:mm:ss')
     },
     toHumaneDateHMS(number){
-      return moment.unix(number).format('H:MM:SS')
+      return moment.unix(number).format('H:mm:ss')
     }
   }
 }
