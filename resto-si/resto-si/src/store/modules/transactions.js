@@ -20,18 +20,28 @@ export default{
       })
       return income
     },
-    transactionsIncomeTimed(state){
+    transactionsTimed(state){
+      // const items = [...Object.values(state.items)].forEach(transaction => {
+      //   let res = {};
+      //   [...Object.keys(transaction.items)].forEach(item => {
+      //     item.name in res ?  res[item.name] = 1 : res[item.name] += 1
+      //   })
+
+      //   return res
+      // })
+
       return [...Object.values(state.items)].map(transaction => {
         let sum = 0;
         let foods = 0;
         let drinks = 0
+        
         if(transaction.items){
           [...Object.values(transaction.items)].forEach(item => {
             sum += item.qty * item.price
             if(item.type === 'food'){
-              foods +=1
-            }else if(item.type === 'drinks'){
-              drinks +=1
+              foods += item.qty
+            }else if(item.type === 'drink'){
+              drinks += item.qty
             }
           });
         }
@@ -42,7 +52,8 @@ export default{
           income: sum,
           countFoods: foods,
           countDrinks: drinks,
-          date: transaction.date
+          date: transaction.date,
+          items: transaction.items
         }
       })
     }
@@ -107,8 +118,8 @@ export default{
     },
     createTransaction(context, {cashier, tableNumber, items}){
       const transactionId = firebase.database().ref('transactions').push().key
-      const timestamp = Math.floor(Date.now() / 1000)
-      const lastEditAt = Math.floor(Date.now() / 1000)
+      const timestamp = moment().unix()
+      const lastEditAt = moment().unix()
 
       let month
       const dumbMonth = Number(moment.unix(timestamp).format('MM'))

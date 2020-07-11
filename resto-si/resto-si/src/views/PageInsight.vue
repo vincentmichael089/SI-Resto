@@ -2,47 +2,60 @@
   <div>
     <div style="margin: 1rem;">
       <h4>Insight</h4>
+      {{transactionsByTime}}
     </div>    
     <b-card  
     header-tag="header"  
+    headerClass="mb-0 pb-1"
     style="margin: 1rem;"
     class="mb-2 ">
       <template v-slot:header>
-        <table style="width: 100%">
-          <tr>
-            <td>
-              <div>
-                <h5><b>Laporan Penjualan</b></h5>
-                <small>Periode {{startDate}} - {{endDate}}</small>
+        <div class="row">
+          <div class="col">
+            <div class="p-0 m-0">
+                <h5 class="p-0 m-0"><b>Laporan Penjualan</b></h5>
+                <small class="p-0 m-0">Periode {{startDate}} - {{endDate}}</small>
               </div>
-            </td>
-            <td style="text-align: right;">
-              <div>
-                <b-button-group size="sm">
-                  <b-button @click="getTransactionsInTimeSpan(0)">Hari</b-button>
-                  <b-button @click="getTransactionsInTimeSpan(1)">Minggu</b-button>
-                  <b-dropdown right text="Bulan" size="sm">
-                    <b-dropdown-item @click="getTransactionsInTimeSpan(2)">1 Bulan</b-dropdown-item>
-                    <b-dropdown-item @click="getTransactionsInTimeSpan(3)">3 Bulan</b-dropdown-item>
-                    <b-dropdown-item @click="getTransactionsInTimeSpan(4)">6 Bulan</b-dropdown-item>
-                  </b-dropdown>
-                  <b-button @click="getTransactionsInTimeSpan(5)">Tahun</b-button>
-                </b-button-group>
-              </div>
-            </td>
-          </tr>
-        </table>
+          </div>
+          <div class="col-12 col-sm-auto text-center p-2">
+            <b-button-group size="sm">
+              <b-button @click="getTransactionsInTimeSpan(0)">Hari</b-button>
+              <b-button @click="getTransactionsInTimeSpan(1)">Minggu</b-button>
+              <b-dropdown right text="Bulan" size="sm">
+                <b-dropdown-item @click="getTransactionsInTimeSpan(2)">1 Bulan</b-dropdown-item>
+                <b-dropdown-item @click="getTransactionsInTimeSpan(3)">3 Bulan</b-dropdown-item>
+                <b-dropdown-item @click="getTransactionsInTimeSpan(4)">6 Bulan</b-dropdown-item>
+              </b-dropdown>
+              <b-button @click="getTransactionsInTimeSpan(5)">Tahun</b-button>
+            </b-button-group>
+          </div>
+        </div>
       </template>
       <div class="container">
-        <InsightHeader :totalIncome="toCurrencyFormat(income)" :totalVisitor="transactionsIncomeByTime.length"/>
-        <div class="row pt-4">
+        <InsightHeader 
+        :totalIncome="toCurrencyFormat(income)" 
+        :totalVisitor="transactionsByTime.length"
+        :totalItem="totalItem"/>
+        <div class="row pt-lg-4">
           <div class="col-md-6">
-            <strong>Pendapatan {{chartTitle}}</strong>
-            <AppChartLine :data="chartData" />
+            <div class="p-2 box-shadow">
+              <strong>Pendapatan {{chartTitle}}</strong>
+              <InsightChartLine :data="chartData"/>
+            </div>
           </div>
           <div class="col-md-6">
-            <strong>Pengunjung {{chartTitle}}</strong>
-            <AppChartBar :data="chartData" />
+            <div class="p-2 box-shadow">
+              <strong class="p-2">Pengunjung {{chartTitle}}</strong>
+              <InsightChartBar :data="chartData" />
+            </div>
+          </div>
+        </div>
+        <div class="row pt-lg-4">
+          <div class="col-12">
+            <div class="p-2 box-shadow">
+              <strong class="p-2">Rincian Penjualan</strong>
+              <InsightChartFood :donutData="chartFoodData"/>
+            </div>
           </div>
         </div>
       </div>
@@ -52,9 +65,10 @@
 
 <script>
 import valueFormatter from '@/mixins/valueFormatter'
-import AppChartLine from '@/components/AppChartLine.vue'
-import AppChartBar from '@/components/AppChartBar.vue'
+import InsightChartLine from '@/components/InsightChartLine.vue'
+import InsightChartBar from '@/components/InsightChartBar.vue'
 import InsightHeader from '@/components/InsightHeader.vue'
+import InsightChartFood from '@/components/InsightChartFood.vue'
 import {mapGetters} from 'vuex'
 import moment from 'moment'
 
@@ -62,8 +76,9 @@ export default {
   name: 'Insight',
   components: {
     InsightHeader,
-    AppChartLine,
-    AppChartBar
+    InsightChartLine,
+    InsightChartBar,
+    InsightChartFood
   },
   mixins: [valueFormatter],
   data(){
@@ -74,16 +89,28 @@ export default {
   },
   computed: {
     ...mapGetters({
-      transactionsIncomeByTime: 'transactions/transactionsIncomeTimed',
+      transactionsByTime: 'transactions/transactionsTimed',
       income: 'transactions/transactionsIncomeTotal'
     }),
     chartData(){
-      const dup = [...Object.values({...this.transactionsIncomeByTime})].reduce((res, obj) => {
+      let items = {};
+      [...Object.values({...this.transactionsByTime})].forEach(transaction => {
+        [...Object.values(transaction.items)].forEach(item => {
+          items[item.name] = {
+            qty: (item.name in items ?  items[item.name].qty : 0) + item.qty
+          }
+        })
+      })
+      
+      const dup = [...Object.values({...this.transactionsByTime})].reduce((res, obj) => {
         res[obj.date] = { 
           income: (obj.date in res ? res[obj.date].income : 0) + obj.income,
           visitor: (obj.date in res ? res[obj.date].visitor : 0) + 1,
-          timestamp: obj.date
+          timestamp: obj.date,
+          items: items
         }
+
+        console.log(res)
         return res;
       }, {})
 
@@ -91,7 +118,6 @@ export default {
     },
     chartTitle(){
       let title
-
       switch(this.timeFlag){
         case 0: 
           title = 'Hari Ini'
@@ -117,7 +143,6 @@ export default {
     },
     startDate(){
       let startDate
-
       switch(this.timeFlag){
         case 0: 
           startDate = moment().startOf('day').format('D MMMM YYYY')
@@ -142,6 +167,18 @@ export default {
     },
     endDate(){
       return moment().endOf('day').format('D MMMM YYYY')
+    },
+    chartFoodData(){
+      return [[...this.transactionsByTime].reduce( function(a, b){
+          return a + b['countFoods'];
+      }, 0),[...this.transactionsByTime].reduce( function(a, b){
+          return a + b['countDrinks'];
+      }, 0)]
+    },
+    totalItem(){
+      return [...this.chartFoodData]. reduce(function(a, b){
+        return a + b;
+      }, 0);
     }
   },
   methods: {
@@ -162,5 +199,7 @@ export default {
 </script>
 
 <style>
-
+.box-shadow{
+  box-shadow: 0 2px 4px 0 rgba(62, 57, 107, 0.13);
+}
 </style>
