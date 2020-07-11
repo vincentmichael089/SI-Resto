@@ -21,15 +21,6 @@ export default{
       return income
     },
     transactionsTimed(state){
-      // const items = [...Object.values(state.items)].forEach(transaction => {
-      //   let res = {};
-      //   [...Object.keys(transaction.items)].forEach(item => {
-      //     item.name in res ?  res[item.name] = 1 : res[item.name] += 1
-      //   })
-
-      //   return res
-      // })
-
       return [...Object.values(state.items)].map(transaction => {
         let sum = 0;
         let foods = 0;

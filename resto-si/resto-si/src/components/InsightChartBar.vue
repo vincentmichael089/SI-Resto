@@ -8,7 +8,7 @@
 import valueFormatter from '@/mixins/valueFormatter'
 
 export default {
-  name: 'ChartLine',
+  name: 'ChartBar',
   props: {
     data: {
       type: Array,
@@ -30,7 +30,7 @@ export default {
         },
         yaxis: {},
         dataLabels: {
-          enabled: true
+          enabled: false
         },
         stroke: {
           curve: 'straight',

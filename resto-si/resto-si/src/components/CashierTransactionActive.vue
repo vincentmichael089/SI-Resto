@@ -500,14 +500,14 @@ export default {
       })
     },
     updateTransaction(){
-      const arrayToObject = (array, keyField) =>
+      const arrayToObject2 = (array, keyField) =>
         array.reduce((obj, item) => {
           obj[item[keyField]] = item
           delete obj[item[keyField]]['.key']
           return obj
         }, {})
 
-      const items = arrayToObject(this.selectedMenus, ".key")
+      const items = arrayToObject2(this.selectedMenus, ".key")
 
       const payload = {
         id: this.editTransactionModal.content.key,

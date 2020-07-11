@@ -1,8 +1,7 @@
 <template>
   <div>
     <div style="margin: 1rem;">
-      <h4>Insight</h4>
-      {{transactionsByTime}}
+      <h4>Insight</h4>{{itemsCount}}
     </div>    
     <b-card  
     header-tag="header"  
@@ -54,7 +53,7 @@
           <div class="col-12">
             <div class="p-2 box-shadow">
               <strong class="p-2">Rincian Penjualan</strong>
-              <InsightChartFood :donutData="chartFoodData"/>
+              <InsightChartFood :donutData="chartFoodData" :itemsCount="itemsCount"/>
             </div>
           </div>
         </div>
@@ -92,7 +91,7 @@ export default {
       transactionsByTime: 'transactions/transactionsTimed',
       income: 'transactions/transactionsIncomeTotal'
     }),
-    chartData(){
+    itemsCount(){
       let items = {};
       [...Object.values({...this.transactionsByTime})].forEach(transaction => {
         [...Object.values(transaction.items)].forEach(item => {
@@ -101,16 +100,16 @@ export default {
           }
         })
       })
-      
+      return items
+    },
+    chartData(){      
       const dup = [...Object.values({...this.transactionsByTime})].reduce((res, obj) => {
         res[obj.date] = { 
           income: (obj.date in res ? res[obj.date].income : 0) + obj.income,
           visitor: (obj.date in res ? res[obj.date].visitor : 0) + 1,
-          timestamp: obj.date,
-          items: items
+          timestamp: obj.date
         }
 
-        console.log(res)
         return res;
       }, {})
 

@@ -21,6 +21,7 @@ export default {
       options: {
         chart: {
           id: 'chart-income',
+          group: 'timed',
           type: 'area',
           zoom: {
             enabled: false
