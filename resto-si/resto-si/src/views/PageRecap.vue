@@ -508,7 +508,7 @@ export default {
       this.editTransactionModal.content.key = item.key
       this.editTransactionModal.content.cashier = item.cashier
       this.editTransactionModal.content.tableNumber = item.tableNumber
-      this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', {id:item.key, flag: 0})
+      this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', {id:item.key, flag: null})
       this.$root.$emit('bv::show::modal', this.editTransactionModal.id, button)
     },
     setInfoModal(item, index, button){

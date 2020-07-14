@@ -75,7 +75,7 @@ export default{
             startTime = Number(moment().subtract(1, 'years').unix())
             break;
           default:
-            // code block
+            startTime = 0
         }
 
         context.state.items = {}

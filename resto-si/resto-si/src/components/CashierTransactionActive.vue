@@ -36,6 +36,7 @@
           <b-card 
             bg-variant="light" header="Light"  header-tag="header"
             style="width: 100%"
+            class="box-shadow"
             headerClass= 'pl-2 pt-2 pr-2 pb-1 border-bottom-0'
             bodyClass= 'p-3 scrollcard'
             footerClass= 'p-0 border-top-0'>
