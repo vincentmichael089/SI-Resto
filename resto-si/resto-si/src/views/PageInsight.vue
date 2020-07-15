@@ -2,7 +2,6 @@
   <div>
     <div style="margin: 1rem;">
       <h4>Insight</h4>
-      {{apriori}}
     </div>    
     <b-card  
     header-tag="header"  
@@ -58,6 +57,14 @@
             </div>
           </div>
         </div>
+        <div class="row pt-lg-4">
+          <div class="col-12">
+            <div class="p-2 box-shadow">
+              <strong class="p-2">Pasangan / Triplet Item {{chartTitle}}</strong>
+              {{rules}}
+            </div>
+          </div>
+        </div>
       </div>
     </b-card>
   </div>
@@ -71,6 +78,7 @@ import InsightHeader from '@/components/InsightHeader.vue'
 import InsightChartFood from '@/components/InsightChartFood.vue'
 import {mapGetters} from 'vuex'
 import moment from 'moment'
+import * as mba from '@/mba.js'
 
 export default {
   name: 'Insight',
@@ -92,124 +100,8 @@ export default {
       transactionsByTime: 'transactions/transactionsTimed',
       income: 'transactions/transactionsIncomeTotal'
     }),
-    apriori(){
-      let items = {};
-      let minSupport = 0.2;
-      let temp = []
-      const numTransaction = [...this.transactionsByTime].length;
-
-      // count occurences of single items
-      [...Object.values({...this.transactionsByTime})].forEach(transaction => {
-        [...Object.values(transaction.items)].forEach(item => {       
-          items[item.name] = {
-            name: item.name,
-            occurence: (item.name in items ?  items[item.name].occurence : 0) + 1
-          }
-        })
-      });
-
-      // count support, filter single items below minimal support
-      [...Object.values(items)].forEach(item => {
-        if(item.occurence / [...this.transactionsByTime].length >= minSupport){
-          if(!temp.includes(item.name)){
-            temp.push(item.name)
-          }
-
-          items[item.name] = {
-            ...items[item.name],
-            support: item.occurence / numTransaction
-          }
-        }else{
-          delete items[item.name]
-        }
-      })
-
-      // count occurences of pair items
-      for (let i = 0; i < temp.length - 1; i++) {
-        for (let j = i + 1; j < temp.length; j++) {
-          [...Object.values({...this.transactionsByTime})].forEach(transaction => {
-              let checkItem1 = false;
-              let checkItem2 = false;
-
-              [...Object.values(transaction.items)].forEach(item => {       
-                if(item.name === temp[i]){
-                  checkItem1 = true
-                }else if(item.name === temp[j]){
-                  checkItem2 = true
-                }
-              })     
-
-              if(checkItem1 === true && checkItem2 === true){
-                items[`${temp[i]}, ${temp[j]}`] = {
-                  name: `${temp[i]}, ${temp[j]}`,
-                  occurence: (`${temp[i]}, ${temp[j]}` in items ?  items[`${temp[i]}, ${temp[j]}`].occurence : 0) + 1,
-                }
-              }
-          })
-        }
-      }
-
-      // count support, filter pair items below minimal support
-      [...Object.values(items)].forEach(item => {
-        if(item.occurence / [...this.transactionsByTime].length >= minSupport){
-          items[item.name] = {
-            ...items[item.name],
-            support: item.occurence / numTransaction
-          }
-        }else{
-          delete items[item.name]
-        }
-      })
-
-
-      // count occurences of triplet items
-      for (let i = 0; i < temp.length - 1; i++) {
-        for (let j = i + 1; j < temp.length; j++) {
-          for (let k = j + 1; j < temp.length; j++) {
-            [...Object.values({...this.transactionsByTime})].forEach(transaction => {
-                let checkItem1 = false;
-                let checkItem2 = false;
-                let checkItem3 = false;
-
-                [...Object.values(transaction.items)].forEach(item => {       
-                  if(item.name === temp[i]){
-                    checkItem1 = true
-                  }else if(item.name === temp[j]){
-                    checkItem2 = true
-                  }else if(item.name === temp[k]){
-                    checkItem3 = true
-                  }
-                })     
-
-                if(checkItem1 === true && checkItem2 === true && checkItem3 === true){
-                  items[`${temp[i]}, ${temp[j]}, ${temp[k]}`] = {
-                    name: `${temp[i]}, ${temp[j]}, ${temp[k]}`,
-                    occurence: (`${temp[i]}, ${temp[j]}, ${temp[k]}` in items ?  items[`${temp[i]}, ${temp[j]}, ${temp[k]}`].occurence : 0) + 1,
-                  }
-                }
-            })
-          }
-        }
-      }
-
-      // count support, filter single items below minimal support
-      [...Object.values(items)].forEach(item => {
-        if(item.occurence / [...this.transactionsByTime].length >= minSupport){
-          if(!temp.includes(item.name)){
-            temp.push(item.name)
-          }
-
-          items[item.name] = {
-            ...items[item.name],
-            support: item.occurence / numTransaction
-          }
-        }else{
-          delete items[item.name]
-        }
-      })
-
-      console.log(temp)
-      return items
+    rules(){
+      return mba.apriori(this.transactionsByTime, 0.6)
     },
     itemsCount(){
       let items = {};
