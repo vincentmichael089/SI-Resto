@@ -17,7 +17,7 @@ export function apriori(transactions, minSupport){
 
   // count support, filter single items below minimal support
   [...Object.values(items)].forEach(item => {
-    if(item.occurence / [...transactions].length >= minSupport){ // if above min support
+    if(item.occurence / numTransaction >= minSupport){ // if above min support
       if(!temp.includes(item.name)){
         temp.push(item.name) // save distinct item to temp
       }
@@ -48,10 +48,12 @@ export function apriori(transactions, minSupport){
           })     
 
           if(checkItem1 === true && checkItem2 === true){
-            items[`${temp[i]}, ${temp[j]}`] = {
-              name: `${temp[i]}, ${temp[j]}`,
-              items: [temp[i], temp[j]],
-              occurence: (`${temp[i]}, ${temp[j]}` in items ?  items[`${temp[i]}, ${temp[j]}`].occurence : 0) + 1,
+            let sortedItem = [temp[i], temp[j]].sort();
+
+            items[`${sortedItem[0]}, ${sortedItem[1]}`] = {
+              name: `${sortedItem[0]}, ${sortedItem[1]}`,
+              items: [sortedItem[0], sortedItem[1]],
+              occurence: (`${sortedItem[0]}, ${sortedItem[1]}` in items ?  items[`${sortedItem[0]}, ${sortedItem[1]}`].occurence : 0) + 1,
             }
           }
       })
@@ -60,7 +62,7 @@ export function apriori(transactions, minSupport){
 
   // count support, filter pair items below minimal support
   [...Object.values(items)].forEach(item => {
-    if(item.occurence / [...transactions].length >= minSupport){
+    if(item.occurence / numTransaction >= minSupport){
       items[item.name] = {
         ...items[item.name],
         support: item.occurence / numTransaction // count support
@@ -69,7 +71,6 @@ export function apriori(transactions, minSupport){
       delete items[item.name] // save memory
     }
   })
-
 
   // count occurences of triplet items
   for (let i = 0; i < temp.length - 1; i++) {
@@ -92,10 +93,12 @@ export function apriori(transactions, minSupport){
             })     
 
             if(checkItem1 === true && checkItem2 === true && checkItem3 === true){
-              items[`${temp[i]}, ${temp[j]}, ${temp[k]}`] = {
-                name: `${temp[i]}, ${temp[j]}, ${temp[k]}`,
-                items: [temp[i], temp[j], temp[k]],
-                occurence: (`${temp[i]}, ${temp[j]}, ${temp[k]}` in items ?  items[`${temp[i]}, ${temp[j]}, ${temp[k]}`].occurence : 0) + 1,
+              let sortedItem = [temp[i], temp[j], temp[k]].sort();
+
+              items[`${sortedItem[0]}, ${sortedItem[1]}, ${sortedItem[2]}`] = {
+                name: `${sortedItem[0]}, ${sortedItem[1]}, ${sortedItem[2]}`,
+                items: [sortedItem[0], sortedItem[1], sortedItem[2]],
+                occurence: (`${sortedItem[0]}, ${sortedItem[1]}, ${sortedItem[2]}` in items ?  items[`${sortedItem[0]}, ${sortedItem[1]}, ${sortedItem[2]}`].occurence : 0) + 1,
               }
             }
         })
@@ -147,7 +150,7 @@ export function apriori(transactions, minSupport){
           }
         }
       }
-
+      
       rules[`${item.items[0]} => {${item.items[1]}, ${item.items[2]}}`] = {
         name: `${item.items[0]} => {${item.items[1]}, ${item.items[2]}}`,
         confidence: item.support / items[item.items[0]].support,
@@ -186,6 +189,6 @@ export function apriori(transactions, minSupport){
 
     }
   })
-
+  
   return rules
 }

@@ -101,7 +101,7 @@ export default {
       income: 'transactions/transactionsIncomeTotal'
     }),
     rules(){
-      return mba.apriori(this.transactionsByTime, 0.6)
+      return mba.apriori(this.transactionsByTime, 0.5)
     },
     itemsCount(){
       let items = {};
