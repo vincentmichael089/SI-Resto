@@ -12,7 +12,7 @@
         <div class="row">
           <div class="col">
             <div class="p-0 m-0">
-                <h5 class="p-0 m-0"><b>Grafik Penjualan</b></h5>
+                <h5 class="p-0 m-0"><b>Informasi Penjualan</b></h5>
                 <small class="p-0 m-0">Periode {{startDate}} - {{endDate}}</small>
               </div>
           </div>
@@ -35,33 +35,33 @@
         :totalIncome="toCurrencyFormat(income)" 
         :totalVisitor="transactionsByTime.length"
         :totalItem="totalItem"/>
-        <div class="row pt-lg-4">
-          <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-6  pt-4 ">
             <div class="p-2 box-shadow">
-              <strong>Pendapatan {{chartTitle}}</strong>
+              <div class="p-3"><strong>Pendapatan {{chartTitle}}</strong></div>
               <InsightChartLine :data="chartData"/>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6  pt-4 ">
             <div class="p-2 box-shadow">
-              <strong class="p-2">Pengunjung {{chartTitle}}</strong>
+              <div class="p-3"><strong>Pengunjung {{chartTitle}}</strong></div>
               <InsightChartBar :data="chartData" />
             </div>
           </div>
         </div>
-        <div class="row pt-lg-4">
+        <div class="row  pt-4">
           <div class="col-12">
             <div class="p-2 box-shadow">
-              <strong class="p-2">Rincian Penjualan {{chartTitle}}</strong>
+              <div class="p-3"><strong>Rincian Penjualan {{chartTitle}}</strong></div>
               <InsightChartFood :donutData="chartFoodData" :itemsCount="itemsCount" class="pt-4"/>
             </div>
           </div>
         </div>
-        <div class="row pt-lg-4">
+        <div class="row pt-4">
           <div class="col-12">
             <div class="p-2 box-shadow">
-              <strong class="p-2">Pasangan / Triplet Item {{chartTitle}}</strong>
-              {{rules}}
+              <div class="p-3"><strong>Pasangan / Triplet Item {{chartTitle}}</strong></div>
+              <InsightTableMarketBasket :transactionsByTime="transactionsByTime"/>
             </div>
           </div>
         </div>
@@ -76,9 +76,9 @@ import InsightChartLine from '@/components/InsightChartLine.vue'
 import InsightChartBar from '@/components/InsightChartBar.vue'
 import InsightHeader from '@/components/InsightHeader.vue'
 import InsightChartFood from '@/components/InsightChartFood.vue'
+import InsightTableMarketBasket from '@/components/InsightTableMarketBasket.vue'
 import {mapGetters} from 'vuex'
 import moment from 'moment'
-import * as mba from '@/mba.js'
 
 export default {
   name: 'Insight',
@@ -86,13 +86,14 @@ export default {
     InsightHeader,
     InsightChartLine,
     InsightChartBar,
-    InsightChartFood
+    InsightChartFood,
+    InsightTableMarketBasket
   },
   mixins: [valueFormatter],
   data(){
     return {
       isBusy: true,
-      timeFlag: 1
+      timeFlag: 1,
     }
   },
   computed: {
@@ -100,9 +101,6 @@ export default {
       transactionsByTime: 'transactions/transactionsTimed',
       income: 'transactions/transactionsIncomeTotal'
     }),
-    rules(){
-      return mba.apriori(this.transactionsByTime, 0.5)
-    },
     itemsCount(){
       let items = {};
       [...Object.values({...this.transactionsByTime})].forEach(transaction => {

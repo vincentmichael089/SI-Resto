@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-md-6">
-        <apexchart width="100%" type="donut" :options="donutOptions" :series="donutSeries"></apexchart>
+      <div class="col-md-6 p-3">
+        <apexchart height="95%" type="donut" :options="donutOptions" :series="donutSeries"></apexchart>
       </div>
-      <div class="col-md-6">
-        <apexchart width="100%" type="bar" :options="barOptions" :series="barSeries"></apexchart>
+      <div class="col-md-6 p-3">
+        <apexchart type="bar" :options="barOptions" :series="barSeries"></apexchart>
       </div>
     </div>
   </div>
@@ -136,6 +136,7 @@ export default {
     updateChart(){
       this.donutSeries = [...this.donutData]
       this.barSeries = [{
+        name: "Jumlah",
         data: [...this.barData].map(datum => {
           return {
             x: datum.x,

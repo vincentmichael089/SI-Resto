@@ -1,5 +1,5 @@
 <template>
-  <div class="row pb-2 pt-0">
+  <div class="row pt-0">
     <div class="col-lg-4 col-md-4 col-sm-4 pt-2">     
       <b-card bg-variant="success" text-variant="white" header="Pendapatan"
         style="width: 100%"

@@ -26,4 +26,18 @@ export default {
 .box-shadow{
   box-shadow: 0 2px 8px 0 rgba(0,0,0,.15);
 }
+
+.note-info {
+  border-color: #59c4e4;
+  background: #f8ffff;
+}
+
+.note {
+  margin-bottom: 15px;
+  padding: 15px;
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-color: #ddd;
+  background: #fafafa;
+}
 </style>

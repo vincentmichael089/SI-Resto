@@ -1,6 +1,6 @@
 <template>
   <div>
-    <apexchart width="100%" type="area" :options="options" :series="series"></apexchart>
+    <apexchart height="150%" type="area" :options="options" :series="series"></apexchart>
   </div>
 </template>
 
