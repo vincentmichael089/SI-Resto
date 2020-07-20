@@ -6,7 +6,7 @@
       body-class="pt-0 mt-0"
       class="mb-2">
       <template v-slot:header>
-        <b-row>
+        <b-row v-show="transactions.length > 0">
           <b-col lg="6" class="my-1"><strong>Total Pemasukan Hari Ini: {{toCurrencyFormat(dailyIncome)}}</strong></b-col>
           <!-- Search bar -->
           <b-col lg="6" class="my-1">  
@@ -31,8 +31,13 @@
         </b-row>
       </template>
 
+      <div class="text-center" v-show="transactions.length === 0">
+        <img src="@/assets/notransaction.svg" style="max-height: 300px"><h3>Belum ada transaksi hari ini</h3>
+      </div>
+
       <!-- Table -->
       <b-table
+        v-show="transactions.length > 0"
         show-empty
         small
         bordered
