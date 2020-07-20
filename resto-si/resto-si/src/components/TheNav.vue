@@ -8,23 +8,51 @@
       id="sidebar-backdrop"
       backdrop
       shadow
+      bg-variant="white"
     >
       <b-list-group>
         <b-list-group-item 
-          v-for="route in routes"
-          :key="route.slug" 
-          :to="{ name: route.slug }"
+          :to="{ name: 'Home' }"
           class="sidebar-item sidebar-route">
-          
-          {{route.name}}
-          </b-list-group-item>
+          <font-awesome-icon :icon="home" class="sidebar-icon"/>
+          Beranda
+        </b-list-group-item>
+        <b-list-group-item 
+          :to="{ name: 'CashierTransactionActive' }"
+          class="sidebar-item sidebar-route">
+          <font-awesome-icon :icon="cashier" class="sidebar-icon"/>
+          Kasir
+        </b-list-group-item>
+        <b-list-group-item 
+          :to="{ name: 'Recap' }"
+          class="sidebar-item sidebar-route">
+          <font-awesome-icon :icon="recap" class="sidebar-icon"/>
+          Riwayat Transaksi
+        </b-list-group-item>
+        <b-list-group-item 
+          :to="{ name: 'Insight' }"
+          class="sidebar-item sidebar-route">
+          <font-awesome-icon :icon="insight" class="sidebar-icon"/>
+          Insight
+        </b-list-group-item>
+        <b-list-group-item 
+          :to="{ name: 'Menu' }"
+          class="sidebar-item sidebar-route">
+          <font-awesome-icon :icon="menu" class="sidebar-icon"/>
+          Pengaturan Menu
+        </b-list-group-item>
       </b-list-group>
+      <template v-slot:footer>
+       <div class="d-flex bg-dark text-light px-3 py-2">
+        <strong class="mr-auto"><small>@vincentmichael089</small></strong>
+       </div>
+      </template>
     </b-sidebar>
   </div>
 </template>
 
 <script>
-import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faHome, faCashRegister, faChartLine, faDatabase, faWrench } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   name: 'TheNav',
@@ -59,20 +87,54 @@ export default {
   computed: {
     bars(){
       return faBars
+    },
+    home(){
+      return faHome
+    },
+    insight(){
+      return faChartLine
+    },
+    cashier(){
+      return faCashRegister
+    },
+    recap(){
+      return faDatabase
+    },
+    menu(){
+      return faWrench
     }
   },
 }
 </script>
 
 <style scoped>
+  .sidebar-icon {
+    display: inline-block;
+    width: 20px;
+    margin-right: 12px;
+    margin-left: -5px;
+    text-align: center;
+    font-size: 16px;
+    line-height: 1;
+  }
+
   .sidebar-item:hover {
-    background-color: #08f26d17;
+    background-color: #f0fbfc;
+  }
+
+  .sidebar-item {
+    border-color: #ffffff;
+  }
+
+  .sidebar-item:active {
+    font-weight: 300;
   }
 
   .active-menu {
-    background-color: #08f26d3b;
-    color: black;
-    border-color: #08f26d00;
+    background-color: #f0fbfc;
+    color: #05bbc9;
+    font-family: Barlow-Medium;
+    border-color: #f0fbfc03;
   }
 
   .burgerbar {

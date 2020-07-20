@@ -31,13 +31,17 @@ export default {
           id: 'chart-food',
           zoom: {
             enabled: false
-          }
+          },
+          
+        },
+        legend: {
+          position: 'right'
         },
         labels: ['Makanan', 'Minuman'],
         plotOptions: {
           pie: {
             donut: {
-              size: '60%',
+              customScale: 2,
               labels: {
                 show: true,
                 total: {
@@ -50,7 +54,9 @@ export default {
               },
             }
           }
-        }
+        },
+        colors: ["#ff6178", "#8e78d7"],
+       
       },
       donutSeries: [...this.donutData],
       barOptions: {
@@ -98,7 +104,19 @@ export default {
             }
           }
         },
-        colors: ['#33b2df']
+        colors: ['#ec9f05'],
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'dark',
+            gradientToColors: ['#ff4e00'],
+            shadeIntensity: 1,
+            type: 'horizontal',
+            opacityFrom:1,
+            opacityTo:1,
+            stops: [0, 90, 100]
+          },
+        }
       },
       barSeries: [{
         name: "Jumlah",

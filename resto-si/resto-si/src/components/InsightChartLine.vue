@@ -43,6 +43,19 @@ export default {
         },
         markers: {
           size: 4,
+        },
+        colors: ['#0fd64f'],
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'dark',
+            gradientToColors: ['#84fb95'],
+            shadeIntensity: 1,
+            type: 'vertical',
+            opacityFrom:0.8,
+            opacityTo: 0.7,
+            stops: [0, 90, 100]
+          },
         }
       },
       series: [{

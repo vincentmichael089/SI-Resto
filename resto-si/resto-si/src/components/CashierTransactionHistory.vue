@@ -2,8 +2,9 @@
   <div>
     <b-card  
       header-tag="header"  
-      style="margin: 1rem;"
-      class="mb-2 ">
+      style="margin: 1rem; border: 0"
+      body-class="pt-0 mt-0"
+      class="mb-2">
       <template v-slot:header>
         <b-row>
           <b-col lg="6" class="my-1"><strong>Total Pemasukan Hari Ini: {{toCurrencyFormat(dailyIncome)}}</strong></b-col>
@@ -13,11 +14,11 @@
               label='Cari Transaksi'
               label-cols-lg="3"
               label-align-lg="right"
-              label-size="sm"
               label-for="filterInput"
               class="mb-0"
+              label-class="f-semibold"
             >
-              <b-input-group size="sm">
+              <b-input-group>
                 <b-form-input
                   v-model="filter"
                   type="search"
@@ -88,7 +89,7 @@
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok, cancel }">
-          <b-button size="sm" @click="cancel()">Batal</b-button>
+          <b-button size="sm" variant="outline-secondary" @click="cancel()">Batal</b-button>
           <b-button size="sm" variant="danger" @click="deleteTransaction()">Hapus</b-button>
         </template>
       </b-modal>
@@ -165,7 +166,7 @@
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok }">
-          <b-button size="sm" @click="ok()">Tutup</b-button>
+          <b-button size="sm" @click="ok()" variant="info" class="button-primary">Tutup</b-button>
           <b-button v-show="finishFlag" size="sm" @click="setFinishModal()" variant="success">Selesai</b-button>
         </template>
       </b-modal>
@@ -190,6 +191,7 @@
               label-align-lg="right"
               label-size="sm"
               label-for="filterInput"
+              label-class="f-semibold"
               class="mb-0"
             >
               <b-input-group size="sm">
@@ -207,6 +209,7 @@
               label-align-lg="right"
               label-size="sm"
               label-for="filterInput"
+              label-class="f-semibold"
               class="mb-0"
             >
               <b-input-group size="sm">
@@ -263,10 +266,10 @@
           <button type="button" class="close" data-dismiss="modal" @click="cancelTransaction()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer>
-          <b-button size="sm" variant="danger" @click="cancelTransaction()">Batal</b-button>
-          <b-button size="sm" variant="info" v-b-modal.modal-add-transaction-detail>Rincian</b-button>
-          <b-button v-show="editFlag" size="sm" variant="success" @click="updateTransaction()">Simpan</b-button>
-          <b-button v-show="!editFlag" size="sm" variant="success" @click="createTransaction()">Tambah</b-button>
+          <b-button size="sm" variant="outline-secondary" @click="cancelTransaction()">Batal</b-button>
+          <b-button size="sm" variant="outline-info" v-b-modal.modal-add-transaction-detail>Rincian</b-button>
+          <b-button v-show="editFlag" size="sm" variant="info" class="button-primary" @click="updateTransaction()">Simpan</b-button>
+          <b-button v-show="!editFlag" size="sm" variant="info" class="button-primary" @click="createTransaction()">Tambah</b-button>
         </template>  
       </b-modal>
 
@@ -281,7 +284,7 @@
         footerClass= 'p-2 border-top-0'>
           <div class="text-center col  p-3">Tidak ada menu! Tambahkan menu <span @click="navigateToPageMenu()" style="color: green; cursor: pointer;">disini</span></div>
           <template v-slot:modal-footer="{ cancel }">
-            <b-button size="sm" variant="secondary" @click="cancel()">Tutup</b-button>
+            <b-button size="sm" variant="outline-secondary" @click="cancel()">Tutup</b-button>
           </template>
       </b-modal>
         
@@ -333,7 +336,7 @@
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok }">
-          <b-button size="sm" @click="ok()">Tutup</b-button>
+          <b-button size="sm" variant="info" class="button-primary" @click="ok()">Tutup</b-button>
         </template>
       </b-modal>
   </div>

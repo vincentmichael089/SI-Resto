@@ -2,8 +2,8 @@
   <div>
     <b-card  
       header-tag="header"  
-      style="margin: 1rem;"
-      class="mb-2 ">
+      style="margin: 1rem; border: 0"
+      class="mb-2"> 
       <template v-slot:header>
         <b-row>
           <b-col>
@@ -13,14 +13,14 @@
                 <td>
                   <div>
                     <b-button 
-                    size="sm" 
-                    variant="success"
+                    variant="info"
+                    class="button-primary"
                     @click="setEditModal(null, null, $event.target)"><font-awesome-icon :icon="icoPlus"/> Transaksi Baru </b-button>
                   </div>
                 </td>
                 <!-- Number of Active Transaction -->
                 <td style="text-align: right;">
-                  <strong>Transaksi Aktif: {{activeTransactions.length}}</strong>
+                  <h6 class="f-semibold"> Transaksi Aktif: {{activeTransactions.length}}</h6>
                 </td>
               </tr>
             </table>
@@ -37,9 +37,9 @@
             bg-variant="light" header="Light"  header-tag="header"
             style="width: 100%"
             class="box-shadow"
-            headerClass= 'pl-2 pt-2 pr-2 pb-1 border-bottom-0'
-            bodyClass= 'p-3 scrollcard'
-            footerClass= 'p-0 border-top-0'>
+            headerClass= 'pl-2 pt-2 pr-2 pb-1 border-bottom-0 color-primary'
+            bodyClass= 'p-3 scrollcard card-bg'
+            footerClass= 'p-0 border-top-0 card-bg'>
             <div  class="p-0 m-0">
               <table style="width: 100%;">
                 <tr v-for="item in transaction.transactionItems" :key="item.key">
@@ -56,7 +56,7 @@
               <div class="text-center">
                 <div class="pt-1 pb-1 px-2"><strong>Total: {{transaction.income}}</strong></div>
                 <div class="row p-0 m-0 text-center" style="width: 100%">
-                  <b-button size="sm" variant="success" class="col btn-left" @click="setInfoModal(transaction, transaction.key, $event.target)">Selesai</b-button>
+                  <b-button size="sm" variant="info" class="button-primary col btn-left" @click="setInfoModal(transaction, transaction.key, $event.target)">Selesai</b-button>
                   <b-button size="sm" variant="secondary" class="col btn-center" @click="setEditModal(transaction, -1, $event.target)">Ubah</b-button>
                   <b-button size="sm" variant="danger" class="col btn-right" @click="setDeleteModal(transaction, -1, $event.target)">Hapus</b-button>
                 </div>
@@ -81,7 +81,7 @@
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok, cancel }">
-          <b-button size="sm" @click="cancel()">Batal</b-button>
+          <b-button size="sm" variant="outline-secondary" @click="cancel()">Batal</b-button>
           <b-button size="sm" variant="danger" @click="deleteTransaction()">Hapus</b-button>
         </template>
       </b-modal>
@@ -100,8 +100,8 @@
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok, cancel }">
-          <b-button size="sm" @click="cancel()">Batal</b-button>
-          <b-button size="sm" variant="success" @click="finishTransaction()">Selesai</b-button>
+          <b-button size="sm" variant="outline-secondary" @click="cancel()">Batal</b-button>
+          <b-button size="sm" variant="info" class="button-primary" @click="finishTransaction()">Selesai</b-button>
         </template>
       </b-modal>
 
@@ -158,8 +158,8 @@
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok }">
-          <b-button size="sm" @click="ok()">Tutup</b-button>
-          <b-button v-show="finishFlag" size="sm" @click="setFinishModal()" variant="success">Selesai</b-button>
+          <b-button size="sm" variant="outline-secondary" @click="ok()">Tutup</b-button>
+          <b-button v-show="finishFlag" size="sm" @click="setFinishModal()" variant="info" class="button-primary">Selesai</b-button>
         </template>
       </b-modal>
 
@@ -183,6 +183,7 @@
               label-align-lg="right"
               label-size="sm"
               label-for="filterInput"
+              label-class="f-semibold"
               class="mb-0"
             >
               <b-input-group size="sm">
@@ -200,6 +201,7 @@
               label-align-lg="right"
               label-size="sm"
               label-for="filterInput"
+              label-class="f-semibold"
               class="mb-0"
             >
               <b-input-group size="sm">
@@ -256,10 +258,10 @@
           <button type="button" class="close" data-dismiss="modal" @click="cancelTransaction()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer>
-          <b-button size="sm" variant="danger" @click="cancelTransaction()">Batal</b-button>
-          <b-button size="sm" variant="info" v-b-modal.modal-add-transaction-detail>Rincian</b-button>
-          <b-button v-show="editFlag" size="sm" variant="success" @click="updateTransaction()">Simpan</b-button>
-          <b-button v-show="!editFlag" size="sm" variant="success" @click="createTransaction()">Tambah</b-button>
+          <b-button size="sm" variant="outline-secondary" @click="cancelTransaction()">Batal</b-button>
+          <b-button size="sm" variant="outline-info" v-b-modal.modal-add-transaction-detail>Rincian</b-button>
+          <b-button v-show="editFlag" size="sm" variant="info" class="button-primary" @click="updateTransaction()">Simpan</b-button>
+          <b-button v-show="!editFlag" size="sm" variant="info" class="button-primary" @click="createTransaction()">Tambah</b-button>
         </template>  
       </b-modal>
 
@@ -274,7 +276,7 @@
         footerClass= 'p-2 border-top-0'>
           <div class="text-center col  p-3">Tidak ada menu! Tambahkan menu <span @click="navigateToPageMenu()" style="color: green; cursor: pointer;">disini</span></div>
           <template v-slot:modal-footer="{ cancel }">
-            <b-button size="sm" variant="secondary" @click="cancel()">Tutup</b-button>
+            <b-button size="sm" variant="info" class="button-primary" @click="cancel()">Tutup</b-button>
           </template>
       </b-modal>
         
@@ -326,14 +328,14 @@
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok }">
-          <b-button size="sm" @click="ok()">Tutup</b-button>
+          <b-button size="sm" variant="info" class="button-primary" @click="ok()">Tutup</b-button>
         </template>
       </b-modal>
   </div>
 </template>
 
 <script>
-import { faPlusSquare, faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
 import valueFormatter from '@/mixins/valueFormatter'
 
 export default {
@@ -452,7 +454,7 @@ export default {
     },
     // icon loader
     icoPlus(){
-      return faPlusSquare
+      return faPlus
     },
     icoPeek(){
       return faEye
@@ -586,11 +588,11 @@ export default {
 
 <style>
 .btn-left{
-  border-radius:0 0 0 3px
+  border-radius:0 0 0 4px
 }
 
 .btn-right{
-  border-radius:0 0 3px 0
+  border-radius:0 0 4px 0
 }
 
 .btn-center{

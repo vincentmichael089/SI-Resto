@@ -7,9 +7,16 @@
 </template>
 
 <script>
+import { faHome } from '@fortawesome/free-solid-svg-icons'
+
 export default {
   name: 'Home',
   components: {
+  },
+  computed: {
+    home(){
+      return faHome
+    }
   }
 }
 </script>

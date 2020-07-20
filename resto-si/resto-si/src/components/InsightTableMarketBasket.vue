@@ -1,26 +1,27 @@
 <template>
   <div>
-    <div class="container"><div class="px-2 note note-info">
-      <small>
-        3 Metrik dalam Association Rules <br>
+    <div class="container"><div class="px-4 note note-info">
+      <div class="f-semibold">3 metrik penting dalam Market Basket Analysis</div>
+      <div>
         1. Support: Persentase kemunculan suatu menu terhadap jumlah keseluruhan transaksi<br>
-        2. Confidence: Persentase pembelian item Y ketika item X dibeli (X 🡆 Y)  <br>
-        3. Lift: Lift sama dengan 1 🡆 tidak ada hubungan antara menu X dan Y, 
-        Lift lebih besar dari 1 🡆 hubungan positif antara menu X dan Y, 
-        Lift lebih kecil dari 1 🡆 hubungan negatif antara menu X dan Y <br>
-      </small>  
+        2. Confidence: Persentase pembelian item Y ketika item X dibeli (X 🡆 Y)<br>
+        3. Lift: Nilai hubungan antara menu X dan Y<br>
+      </div>
+      <small>Lift sama dengan 1 berarti tidak ada hubungan antara menu X dan Y, 
+        Lift dibawah 1 berarti terdapat hubungan negatif antara menu X dan Y,
+        Lift diatas 1 berarti terdapat hubungan positif antara menu X dan Y</small>
     </div></div>
     <div class="row col">
       <div class="col-lg-4 col-md-6">
-        <label for="range-2">Support Minimal {{ minSupp }}</label>
+        <label for="range-2" class="f-semibold">Support Minimal {{ minSupp }}</label>
         <b-form-input id="range-2" v-model="minSupp" type="range" min="0" max="0.99" step="0.025" class="pt-lg-3"></b-form-input>
       </div>
       <div class="col-lg-4 col-md-6">
-        <label for="range-2">Confidence Minimal {{ minConf }}</label>
+        <label for="range-2" class="f-semibold">Confidence Minimal {{ minConf }}</label>
         <b-form-input id="range-2" v-model="minConf" type="range" min="0" max="0.99" step="0.025" class="pt-lg-3"></b-form-input>
       </div>
       <div class="col-lg-4 col-md-12">
-        <label for="range-2">Filter Pasangan / Triplet</label>
+        <label for="range-2" class="f-semibold">Filter Pasangan / Triplet</label>
         <b-form-input v-model="filter" placeholder="Ketik nama menu..." size="sm"></b-form-input>
       </div>
     </div>

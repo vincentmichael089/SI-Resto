@@ -1,22 +1,22 @@
 <template>
-  <div>
-    <div style="margin: 1rem;">
-      <h4>Pengaturan Menu</h4>
-    </div>
-    <!-- Add Menu -->
-    <div class="col">
-      <b-button 
-      size="sm" 
-      variant="success"
-      @click="setEditModal(null, null, $event.target)"><font-awesome-icon :icon="icoPlus"/> Tambah Menu </b-button>
-    </div>
+  <div class="col">
+    <h4>Pengaturan Menu</h4>
+    <br>
     <b-card  
-      header-tag="header"  
-      style="margin: 1rem;"
-      class="mb-2 ">
+      header-tag="header"
+      class="box-shadow"
+      style="border: 0"
+      body-class="pt-0 mt-0">
       <template v-slot:header>
         <b-row>
           <b-col lg="6" class="my-1">
+            <!-- Add Menu -->
+            <div>
+              <b-button
+              variant="info"
+              class="button-primary"
+              @click="setEditModal(null, null, $event.target)"><font-awesome-icon :icon="icoPlus"/> Tambah Menu </b-button>
+            </div>
           </b-col>
           <!-- Search bar -->
           <b-col lg="6" class="my-1">  
@@ -24,11 +24,11 @@
               label='Cari Menu'
               label-cols-lg="3"
               label-align-lg="right"
-              label-size="sm"
               label-for="filterInput"
+              label-class="f-semibold"
               class="mb-0"
             >
-              <b-input-group size="sm">
+              <b-input-group>
                 <b-form-input
                   v-model="filter"
                   type="search"
@@ -80,15 +80,16 @@
       <!-- Edit Menu Modal -->
       <b-modal :id="editMenuModal.id" :title="editMenuModal.title" centered button-size="sm"
         headerClass= 'p-2 border-bottom-0'
-        footerClass= 'p-2 border-top-0'
+        body-class="px-4 pb-0"
+        footerClass= 'pl-2 pb-2 border-top-0'
         >
-        <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Nama Menu" label-for="input-sm">
+        <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Nama Menu" label-for="input-sm" label-class="f-semibold">
           <b-form-input size="sm" v-model="editMenuModal.content.name"></b-form-input>
         </b-form-group>
-        <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Harga" label-for="input-sm">
+        <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Harga" label-for="input-sm" label-class="f-semibold">
           <b-form-input size="sm" v-model="editMenuModal.content.price"></b-form-input>
         </b-form-group>
-        <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Jenis" label-for="input-sm">
+        <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Jenis" label-for="input-sm" label-class="f-semibold">
           <b-form-select v-model="editMenuModal.content.type" :options="typeOptions">
             <template v-slot:first>
               <b-form-select-option :value="null" disabled>-- Pilih jenis menu --</b-form-select-option>
@@ -100,9 +101,9 @@
           <button type="button" class="close" data-dismiss="modal" @click="refreshAndCloseEditMenu()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer>
-          <b-button size="sm" variant="danger" @click="refreshAndCloseEditMenu()">Batal</b-button>
-          <b-button v-show="!editFlag" size="sm" variant="success" @click="createMenu()">Tambah Menu</b-button>
-          <b-button v-show="editFlag" size="sm" variant="success" @click="updateMenu()">Simpan</b-button>
+          <b-button size="sm" variant="outline-secondary" @click="refreshAndCloseEditMenu()">Batal</b-button>
+          <b-button v-show="!editFlag" size="sm"  variant="info" class="button-primary" @click="createMenu()">Tambah Menu</b-button>
+          <b-button v-show="editFlag" size="sm" variant="info" class="button-primary" @click="updateMenu()">Simpan</b-button>
         </template>
       </b-modal>
 
@@ -120,7 +121,7 @@
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok, cancel }">
-          <b-button size="sm" @click="cancel()">Batal</b-button>
+          <b-button size="sm" variant="outline-secondary" @click="cancel()">Batal</b-button>
           <b-button size="sm" variant="danger" @click="deleteMenu()">Hapus</b-button>
         </template>
       </b-modal>
@@ -129,7 +130,7 @@
 </template>
 
 <script>
-import { faTrash, faPen, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faPen, faPlus} from '@fortawesome/free-solid-svg-icons'
 import valueFormatter from '@/mixins/valueFormatter'
 
 export default {
@@ -208,7 +209,7 @@ export default {
       return faPen
     },
     icoPlus(){
-      return faPlusSquare
+      return faPlus
     }
     
   },

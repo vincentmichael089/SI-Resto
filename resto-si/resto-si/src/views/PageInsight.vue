@@ -1,72 +1,62 @@
 <template>
-  <div>
-    <div style="margin: 1rem;">
-      <h4>Insight</h4>
-    </div>    
-    <b-card  
-    header-tag="header"  
-    headerClass="mb-0 pb-1"
-    style="margin: 1rem;"
-    class="mb-2 ">
-      <template v-slot:header>
-        <div class="row">
-          <div class="col">
-            <div class="p-0 m-0">
-                <h5 class="p-0 m-0"><b>Informasi Penjualan</b></h5>
-                <small class="p-0 m-0">Periode {{startDate}} - {{endDate}}</small>
-              </div>
+  <div class="container">
+    <h4>Insight</h4>
+    <br/>
+    <div class="row">
+      <div class="col">
+        <div class="p-0 m-0">
+            <h5 class="p-0 m-0"><b>Informasi Penjualan</b></h5>
+            <small class="p-0 m-0">Periode {{startDate}} - {{endDate}}</small>
           </div>
-          <div class="col-12 col-sm-auto text-center p-2">
-            <b-button-group size="sm">
-              <b-button @click="getTransactionsInTimeSpan(0)">Hari</b-button>
-              <b-button @click="getTransactionsInTimeSpan(1)">Minggu</b-button>
-              <b-dropdown right text="Bulan" size="sm">
-                <b-dropdown-item @click="getTransactionsInTimeSpan(2)">1 Bulan</b-dropdown-item>
-                <b-dropdown-item @click="getTransactionsInTimeSpan(3)">3 Bulan</b-dropdown-item>
-                <b-dropdown-item @click="getTransactionsInTimeSpan(4)">6 Bulan</b-dropdown-item>
-              </b-dropdown>
-              <b-button @click="getTransactionsInTimeSpan(5)">Tahun</b-button>
-            </b-button-group>
-          </div>
-        </div>
-      </template>
-      <div class="container">
-        <InsightHeader 
-        :totalIncome="toCurrencyFormat(income)" 
-        :totalVisitor="transactionsByTime.length"
-        :totalItem="totalItem"/>
-        <div class="row">
-          <div class="col-md-6  pt-4 ">
-            <div class="p-2 box-shadow">
-              <div class="p-3"><strong>Pendapatan {{chartTitle}}</strong></div>
-              <InsightChartLine :data="chartData"/>
-            </div>
-          </div>
-          <div class="col-md-6  pt-4 ">
-            <div class="p-2 box-shadow">
-              <div class="p-3"><strong>Pengunjung {{chartTitle}}</strong></div>
-              <InsightChartBar :data="chartData" />
-            </div>
+      </div>
+      <div class="col-12 col-sm-auto text-center p-2">
+        <b-button-group size="sm">
+          <b-button variant="info" class="button-primary" @click="getTransactionsInTimeSpan(0)">Hari</b-button>
+          <b-button variant="info" class="button-primary" @click="getTransactionsInTimeSpan(1)">Minggu</b-button>
+          <b-dropdown right text="Bulan" size="sm" variant="info" class="button-primary"> 
+            <b-dropdown-item @click="getTransactionsInTimeSpan(2)">1 Bulan</b-dropdown-item>
+            <b-dropdown-item @click="getTransactionsInTimeSpan(3)">3 Bulan</b-dropdown-item>
+            <b-dropdown-item @click="getTransactionsInTimeSpan(4)">6 Bulan</b-dropdown-item>
+          </b-dropdown>
+          <b-button variant="info" class="button-primary" @click="getTransactionsInTimeSpan(5)">Tahun</b-button>
+        </b-button-group>
+      </div>
+    </div>
+ 
+    <InsightHeader 
+      :totalIncome="toCurrencyFormat(income)" 
+      :totalVisitor="transactionsByTime.length"
+      :totalItem="totalItem"/>
+      <div class="row">
+        <div class="col-md-6  pt-4 ">
+          <div class="p-2 box-shadow card-bg">
+            <div class="p-3"><h5 class="f-semibold">Pendapatan {{chartTitle}}</h5></div>
+            <InsightChartLine :data="chartData"/>
           </div>
         </div>
-        <div class="row  pt-4">
-          <div class="col-12">
-            <div class="p-2 box-shadow">
-              <div class="p-3"><strong>Rincian Penjualan {{chartTitle}}</strong></div>
-              <InsightChartFood :donutData="chartFoodData" :itemsCount="itemsCount" class="pt-4"/>
-            </div>
-          </div>
-        </div>
-        <div class="row pt-4">
-          <div class="col-12">
-            <div class="p-2 box-shadow">
-              <div class="p-3"><strong>Pasangan / Triplet Item {{chartTitle}}</strong></div>
-              <InsightTableMarketBasket :transactionsByTime="transactionsByTime"/>
-            </div>
+        <div class="col-md-6  pt-4 ">
+          <div class="p-2 box-shadow card-bg">
+            <div class="p-3"><h5 class="f-semibold">Pengunjung {{chartTitle}}</h5></div>
+            <InsightChartBar :data="chartData" />
           </div>
         </div>
       </div>
-    </b-card>
+      <div class="row  pt-4">
+        <div class="col-12">
+          <div class="p-2 box-shadow card-bg">
+            <div class="p-3"><h5 class="f-semibold">Rincian Penjualan {{chartTitle}}</h5></div>
+            <InsightChartFood :donutData="chartFoodData" :itemsCount="itemsCount"/>
+          </div>
+        </div>
+      </div>
+      <div class="row pt-4">
+        <div class="col-12">
+          <div class="p-2 box-shadow card-bg">
+            <div class="p-3"><h5 class="f-semibold">Pasangan / Triplet Menu {{chartTitle}}</h5></div>
+            <InsightTableMarketBasket :transactionsByTime="transactionsByTime"/>
+          </div>
+        </div>
+      </div>
   </div>
 </template>
 

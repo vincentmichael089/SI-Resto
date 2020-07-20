@@ -1,30 +1,29 @@
 <template>
   <div>
-    <div style="margin: 1rem;">
+    <div style="margin: 1rem;" class="pb-2">
       <h4>Riwayat Transaksi</h4>
     </div>
-
     <b-card  
       header-tag="header"  
-      style="margin: 1rem;"
-      class="mb-2 ">
+      body-class="pt-0 mt-0"
+      style="margin: 1rem; border: 0"
+      class="mb-2 box-shadow">
       <template v-slot:header>
-        <b-col class="my-1 pl-0 mr-0"><strong>{{timeOptionsText}} : {{toCurrencyFormat(income)}}</strong></b-col>
+        <b-col class="my-1 pl-0 mr-0 mb-3"><h5 class="f-semibold">{{timeOptionsText}} : {{toCurrencyFormat(income)}}</h5></b-col>
         <b-row>
           <b-col lg="6" class="my-1">
             <b-form-group
               label="Rentang waktu"
               label-cols-lg="3"
               label-align-lg="right"
-              label-size="sm"
               label-for="initialSortSelect"
+              label-class="f-semibold"
               class="mb-0"
             >
               <b-form-select
                 @change="getTransactionsInTimeSpan()"
                 v-model="timeFlag"
                 id="initialSortSelect"
-                size="sm"
                 :options="timeOptions"
               ></b-form-select>
             </b-form-group>
@@ -35,11 +34,11 @@
               label='Cari Transaksi'
               label-cols-lg="3"
               label-align-lg="right"
-              label-size="sm"
               label-for="filterInput"
+              label-class="f-semibold"
               class="mb-0"
             >
-              <b-input-group size="sm">
+              <b-input-group>
                 <b-form-input
                   v-model="filter"
                   type="search"
@@ -148,7 +147,7 @@
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok }">
-          <b-button size="sm" @click="ok()">Tutup</b-button>
+          <b-button size="sm" @click="ok()" variant="info" class="button-primary">Tutup</b-button>
         </template>
       </b-modal>
 
@@ -166,7 +165,7 @@
           <button type="button" class="close" data-dismiss="modal" @click="close()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer="{ ok, cancel }">
-          <b-button size="sm" @click="cancel()">Batal</b-button>
+          <b-button size="sm" variant="outline-secondary" @click="cancel()">Batal</b-button>
           <b-button size="sm" variant="danger" @click="deleteTransaction()">Hapus</b-button>
         </template>
       </b-modal>
@@ -192,6 +191,7 @@
                 label-size="sm"
                 label-for="filterInput"
                 class="mb-0"
+                label-class="f-semibold"
               >
                 <b-input-group size="sm">
                   <b-form-input
@@ -209,6 +209,7 @@
                 label-size="sm"
                 label-for="filterInput"
                 class="mb-0"
+                label-class="f-semibold"
               >
                 <b-input-group size="sm">
                   <b-form-input
@@ -262,9 +263,9 @@
           <button type="button" class="close" data-dismiss="modal" @click="cancelTransaction()"><span aria-hidden="true" class="modal_button">&times;</span><span class="sr-only">Close</span></button>
         </template>
         <template v-slot:modal-footer>
-          <b-button size="sm" variant="danger" @click="cancelTransaction()">Batal</b-button>
-          <b-button size="sm" variant="info" v-b-modal.modal-add-transaction-detail>Rincian</b-button>
-          <b-button size="sm" variant="success" @click="updateTransaction()">Simpan</b-button>
+          <b-button size="sm" variant="outline-secondary" @click="cancelTransaction()">Batal</b-button>
+          <b-button size="sm" variant="outline-info" v-b-modal.modal-add-transaction-detail>Rincian</b-button>
+          <b-button size="sm" variant="info" class="button-primary" @click="updateTransaction()">Simpan</b-button>
         </template>  
       </b-modal>
 
