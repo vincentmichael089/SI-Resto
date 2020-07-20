@@ -21,6 +21,7 @@
           <!-- Search bar -->
           <b-col lg="6" class="my-1">  
             <b-form-group
+              v-show="menus.length > 0"
               label='Cari Menu'
               label-cols-lg="3"
               label-align-lg="right"
@@ -41,8 +42,14 @@
         </b-row>
       </template>
 
+      <div class="text-center p-4" v-show="menus.length === 0">
+        <img src="@/assets/nomenu.svg" style="max-height: 300px"><h3>Belum ada menu:(</h3>
+      </div>
+
+
       <!-- Table -->
         <b-table
+          v-show="menus.length > 0"
           show-empty
           small
           bordered
