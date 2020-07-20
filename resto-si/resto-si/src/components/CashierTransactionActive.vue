@@ -27,6 +27,11 @@
           </b-col>
         </b-row>
       </template>
+
+      <div class="text-center p-3" v-show="activeTransactions.length === 0">
+        <img src="@/assets/notransactions.svg" style="max-height: 300px"><h3>Tidak ada transaksi aktif</h3>
+      </div>
+
       <!-- Card Active Transactions -->
       <div class="row">
         <div v-for="transaction in activeTransactions"
