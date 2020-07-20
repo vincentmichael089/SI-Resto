@@ -90,7 +90,11 @@
             <div class="col"><strong>Memuat...</strong></div>
           </div>
         </template>
-        <template v-slot:empty><div class="text-center col p-3">Transaksi tidak ditemukan</div></template>
+        <template v-slot:empty>
+          <div class="text-center p-4">
+            <img src="@/assets/notransactions.svg" style="max-height: 200px"><h3>Transaksi tidak ditemukan:(</h3>
+          </div>
+        </template>
         <template v-slot:emptyfiltered><div class="text-center col p-3">ID Transaksi tidak ditemukan</div></template>
       </b-table>
 
