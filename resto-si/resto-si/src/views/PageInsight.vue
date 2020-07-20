@@ -1,13 +1,13 @@
 <template>
   <div class="container">
-    <h4>Insight</h4>
+    <h4>Beranda</h4>
     <br/>
     <div class="row">
-      <div class="col">
+      <div class="col pb-2">
         <div class="p-0 m-0">
             <h5 class="p-0 m-0"><b>Informasi Penjualan</b></h5>
-            <small class="p-0 m-0">Periode {{startDate}} - {{endDate}}</small>
-          </div>
+            <div class="p-0 m-0">Periode {{startDate}} - {{endDate}}</div>
+        </div>
       </div>
       <div class="col-12 col-sm-auto text-center p-2">
         <b-button-group size="sm">

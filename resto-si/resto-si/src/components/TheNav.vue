@@ -30,12 +30,6 @@
           Riwayat Transaksi
         </b-list-group-item>
         <b-list-group-item 
-          :to="{ name: 'Insight' }"
-          class="sidebar-item sidebar-route">
-          <font-awesome-icon :icon="insight" class="sidebar-icon"/>
-          Insight
-        </b-list-group-item>
-        <b-list-group-item 
           :to="{ name: 'Menu' }"
           class="sidebar-item sidebar-route">
           <font-awesome-icon :icon="menu" class="sidebar-icon"/>
@@ -43,9 +37,9 @@
         </b-list-group-item>
       </b-list-group>
       <template v-slot:footer>
-       <div class="d-flex bg-dark text-light px-3 py-2">
-        <strong class="mr-auto"><small>@vincentmichael089</small></strong>
-       </div>
+        <div class="d-flex bg-dark text-light px-3 py-2">
+          <strong class="mr-auto"><small>github.com/vincentmichael089</small></strong>
+        </div>
       </template>
     </b-sidebar>
   </div>

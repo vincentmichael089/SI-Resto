@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/PageHome.vue'
 import Menu from '../views/PageMenu.vue'
 import Recap from '../views/PageRecap.vue'
-import Insight from '../views/PageInsight.vue'
+import Home from '../views/PageInsight.vue'
 import Cashier from '../views/PageCashier.vue'
 import CashierTransactionActive from '../components/CashierTransactionActive.vue'
 import CashierTransactionHistory from '../components/CashierTransactionHistory.vue'
@@ -25,11 +24,6 @@ Vue.use(VueRouter)
     path: '/recap',
     name: 'Recap',
     component: Recap
-  },
-  {
-    path: '/insight',
-    name: 'Insight',
-    component: Insight
   },
   {
     path: '/cashier',
