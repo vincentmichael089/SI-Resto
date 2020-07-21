@@ -6,6 +6,7 @@ import Home from '../views/PageInsight.vue'
 import Cashier from '../views/PageCashier.vue'
 import CashierTransactionActive from '../components/CashierTransactionActive.vue'
 import CashierTransactionHistory from '../components/CashierTransactionHistory.vue'
+import NotFound from '../views/PageNotFound.vue'
 
 Vue.use(VueRouter)
 
@@ -40,8 +41,12 @@ Vue.use(VueRouter)
         component: CashierTransactionActive
       },
     ]
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    component: NotFound
   }
-
 ]
 
 const router = new VueRouter({
