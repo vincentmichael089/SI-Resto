@@ -42,7 +42,11 @@
         </b-row>
       </template>
 
-      <div class="text-center p-4" v-show="menus.length === 0">
+      <div class="text-center text-secondary my-2 p-3" v-show="isBusy">
+        <div class="col"><b-spinner variant="secondary" class="align-middle"></b-spinner></div>
+        <div class="col p-2"><strong>Memuat...</strong></div>
+      </div>
+      <div class="text-center p-4" v-show="menus.length === 0 && !isBusy">
         <img src="@/assets/nomenu.svg" style="max-height: 300px"><h3>Belum ada menu:(</h3>
       </div>
 
@@ -94,6 +98,7 @@
           <b-form-input size="sm" v-model="editMenuModal.content.name"></b-form-input>
           <template v-if="$v.editMenuModal.content.name.$error">
             <div v-if="!$v.editMenuModal.content.name.required" class="form-error">*Nama menu wajib diisi</div>
+            <div v-if="!$v.editMenuModal.content.name.unique" class="form-error">*Nama menu tidak boleh sama</div>
           </template>
         </b-form-group>
         <!-- harga -->
@@ -213,7 +218,7 @@ export default {
     editMenuModal: {
       content: {
         name: { required },
-        price: { required, between: between(500, 1000000)},
+        price: { required, between: between(500, 1000000), },
         type: { required }
       }
     }

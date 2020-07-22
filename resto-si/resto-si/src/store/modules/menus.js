@@ -57,8 +57,6 @@ export default{
     },
     fetchAllMenusModifiedByTransactionId(context, {id}){
       return new Promise((resolve) => {
-        // context.dispatch('transactions/fetchTimedTransactions', {flag: flag}, {root: true})
-        // .then(() => {
           const transactions = {...context.rootState.transactions.items}
           const transactionId = Object.keys(transactions).filter(item => item === id)
           const transactionMenus = transactions[transactionId].items
@@ -69,7 +67,6 @@ export default{
           })
           resolve(Object.values(context.state.items))
         })
-      // })
     },
     setMenuQtyZero(context){
       return new Promise((resolve) => {

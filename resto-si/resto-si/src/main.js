@@ -21,6 +21,7 @@ Vue.component('apexchart', VueApexCharts)
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
+
 // Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,

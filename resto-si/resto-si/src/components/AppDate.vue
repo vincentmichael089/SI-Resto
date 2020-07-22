@@ -29,7 +29,6 @@ export default {
     }
   },
   computed: {
-    // icon loader
     icoExcla(){
       return faExclamationCircle
     }
