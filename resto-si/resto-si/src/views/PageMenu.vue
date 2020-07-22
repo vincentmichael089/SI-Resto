@@ -46,7 +46,6 @@
         <img src="@/assets/nomenu.svg" style="max-height: 300px"><h3>Belum ada menu:(</h3>
       </div>
 
-
       <!-- Table -->
         <b-table
           v-show="menus.length > 0"
@@ -77,7 +76,7 @@
           <template v-slot:table-busy>
             <div class="text-center text-secondary my-2 p-3">
               <div class="col"><b-spinner variant="secondary" class="align-middle"></b-spinner></div>
-              <div class="col"><strong>Memuat...</strong></div>
+              <div class="col p-2"><strong>Memuat...</strong></div>
           </div>
           </template>
           <template v-slot:empty><div class="text-center col p-3">Tambahkan menu dengan menekan tombol Tambah Menu</div></template>

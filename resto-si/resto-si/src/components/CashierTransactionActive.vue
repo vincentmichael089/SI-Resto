@@ -28,7 +28,11 @@
         </b-row>
       </template>
 
-      <div class="text-center p-3" v-show="activeTransactions.length === 0">
+      <div class="text-center text-secondary my-2 p-3" v-show="isBusy">
+        <div class="col"><b-spinner variant="secondary" class="align-middle"></b-spinner></div>
+        <div class="col p-2"><strong>Memuat...</strong></div>
+      </div>
+      <div class="text-center p-3" v-show="activeTransactions.length === 0 && !isBusy">
         <img src="@/assets/notransactions.svg" style="max-height: 300px"><h3>Tidak ada transaksi aktif</h3>
       </div>
 
@@ -249,7 +253,7 @@
             <template v-slot:table-busy>
               <div class="text-center text-secondary my-2 p-3">
                 <b-spinner variant="secondary" class="align-middle"></b-spinner>
-                <strong>Memuat...</strong>
+                <strong class="p-2">Memuat...</strong>
               </div>
             </template>
             <template v-slot:emptyfiltered><div class="text-center col  p-3">Menu yang dicari tidak ditemukan</div></template>
@@ -282,7 +286,7 @@
         size="sm"
         headerClass= 'p-2 border-bottom-0'
         footerClass= 'p-2 border-top-0'>
-          <div class="text-center col  p-3">Tidak ada menu! Tambahkan menu <span @click="navigateToPageMenu()" style="color: green; cursor: pointer;">disini</span></div>
+          <div class="text-center col  p-3"><img src="@/assets/nomenu.svg" style="max-height: 300px">Tidak ada menu! Tambahkan menu <span @click="navigateToPageMenu()" style="color: green; cursor: pointer;">disini</span></div>
           <template v-slot:modal-footer="{ cancel }">
             <b-button size="sm" variant="info" class="button-primary" @click="cancel()">Tutup</b-button>
           </template>
@@ -568,7 +572,7 @@ export default {
         this.editTransactionModal.content.cashier = item.cashier
         this.editTransactionModal.content.tableNumber = item.tableNumber
 
-        this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', {id:item.key, flag: 0})
+        this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', {id:item.key})
         this.$root.$emit('bv::show::modal', this.editTransactionModal.id, button)
       }else{
         this.editFlag = false

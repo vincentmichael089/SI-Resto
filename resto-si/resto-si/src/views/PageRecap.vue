@@ -75,10 +75,10 @@
             @click="setInfoModal(row.item, row.index, $event.target)" class="mr-1">
             <font-awesome-icon :icon="icoPeek"/>
           </b-button>
-          <b-button variant="warning" size="sm" 
+          <!-- <b-button variant="warning" size="sm" 
             @click="setEditModal(row.item, row.index, $event.target)" class="mr-1">
             <font-awesome-icon :icon="icoEdit"/>
-          </b-button>
+          </b-button> -->
           <b-button variant="danger" size="sm" 
             @click="setDeleteModal(row.item, row.index, $event.target)">
             <font-awesome-icon :icon="icoTrash"/>
@@ -87,7 +87,7 @@
           <template v-slot:table-busy>
           <div class="text-center text-secondary my-2 p-3">
             <div class="col"><b-spinner variant="secondary" class="align-middle"></b-spinner></div>
-            <div class="col"><strong>Memuat...</strong></div>
+            <div class="col p-2"><strong>Memuat...</strong></div>
           </div>
         </template>
         <template v-slot:empty>
@@ -250,7 +250,7 @@
             <template v-slot:table-busy>
               <div class="text-center text-secondary my-2 p-3">
                 <b-spinner variant="secondary" class="align-middle"></b-spinner>
-                <strong>Memuat...</strong>
+                <strong class="p-2">Memuat...</strong>
               </div>
             </template>
             <template v-slot:emptyfiltered><div class="text-center col  p-3">Menu yang dicari tidak ditemukan</div></template>
@@ -513,7 +513,7 @@ export default {
       this.editTransactionModal.content.key = item.key
       this.editTransactionModal.content.cashier = item.cashier
       this.editTransactionModal.content.tableNumber = item.tableNumber
-      this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', {id:item.key, flag: null})
+      this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', {id:item.key})
       this.$root.$emit('bv::show::modal', this.editTransactionModal.id, button)
     },
     setInfoModal(item, index, button){

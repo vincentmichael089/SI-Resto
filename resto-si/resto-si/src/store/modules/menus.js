@@ -55,21 +55,21 @@ export default{
         })
       })
     },
-    fetchAllMenusModifiedByTransactionId(context, {id, flag}){
+    fetchAllMenusModifiedByTransactionId(context, {id}){
       return new Promise((resolve) => {
-        context.dispatch('transactions/fetchTimedTransactions', {flag: flag}, {root: true})
-        .then(() => {
+        // context.dispatch('transactions/fetchTimedTransactions', {flag: flag}, {root: true})
+        // .then(() => {
           const transactions = {...context.rootState.transactions.items}
           const transactionId = Object.keys(transactions).filter(item => item === id)
           const transactionMenus = transactions[transactionId].items
-          // fetch dari firebase biar ga ngaruh?
+
           Object.keys(transactionMenus).forEach(menuId => {
             const menu = transactionMenus[menuId]
             context.commit('setItem', {resource: 'menus', id: menuId, item: menu}, {root: true})
           })
           resolve(Object.values(context.state.items))
         })
-      })
+      // })
     },
     setMenuQtyZero(context){
       return new Promise((resolve) => {
@@ -78,6 +78,7 @@ export default{
           const menu = modifiedMenu[menuId]
           context.commit('setItem', {resource: 'menus', id: menuId, item: {...menu, qty: 0}}, {root: true})
         })
+        
         resolve(Object.values(context.state.items))
       })
     }

@@ -31,13 +31,17 @@
         </b-row>
       </template>
 
-      <div class="text-center" v-show="transactions.length === 0">
+      <div class="text-center text-secondary my-2 p-3" v-show="isBusy">
+        <div class="col"><b-spinner variant="secondary" class="align-middle"></b-spinner></div>
+        <div class="col p-2"><strong>Memuat...</strong></div>
+      </div>
+      <div class="text-center" v-show="transactions.length === 0 && !isBusy">
         <img src="@/assets/notransaction.svg" style="max-height: 300px"><h3>Belum ada transaksi hari ini</h3>
       </div>
 
       <!-- Table -->
       <b-table
-        v-show="transactions.length > 0"
+        v-show="transactions.length > 0 "
         show-empty
         small
         bordered
@@ -72,7 +76,7 @@
           <template v-slot:table-busy>
           <div class="text-center text-secondary my-2 p-3">
             <div class="col"><b-spinner variant="secondary" class="align-middle"></b-spinner></div>
-            <div class="col"><strong>Memuat...</strong></div>
+            <div class="col p-2"><strong>Memuat...</strong></div>
           </div>
         </template>
         <template v-slot:empty><div class="text-center col p-3">Belum ada transaksi hari ini</div></template>
@@ -241,7 +245,7 @@
             borderless
             head-variant="light"
             sticky-header="45vh"
-            :items="menus"
+            :items="dynamicMenu"
             :fields="menusFields"
             :filter="filterMenu"
             :filterIncludedFields="filterMenuOn"
@@ -257,7 +261,7 @@
             <template v-slot:table-busy>
               <div class="text-center text-secondary my-2 p-3">
                 <b-spinner variant="secondary" class="align-middle"></b-spinner>
-                <strong>Memuat...</strong>
+                <strong class="p-2">Memuat...</strong>
               </div>
             </template>
             <template v-slot:emptyfiltered><div class="text-center col  p-3">Menu yang dicari tidak ditemukan</div></template>
@@ -290,7 +294,7 @@
         size="sm"
         headerClass= 'p-2 border-bottom-0'
         footerClass= 'p-2 border-top-0'>
-          <div class="text-center col  p-3">Tidak ada menu! Tambahkan menu <span @click="navigateToPageMenu()" style="color: green; cursor: pointer;">disini</span></div>
+          <div class="text-center col  p-3"><img src="@/assets/nomenu.svg" style="max-height: 300px">Tidak ada menu! Tambahkan menu <span @click="navigateToPageMenu()" style="color: green; cursor: pointer;">disini</span></div>
           <template v-slot:modal-footer="{ cancel }">
             <b-button size="sm" variant="outline-secondary" @click="cancel()">Tutup</b-button>
           </template>
@@ -361,6 +365,7 @@ export default {
   mixins: [valueFormatter],
   data(){
     return{
+      dynamicMenu: [],
       editFlag: true,
       finishFlag: false,
       transactionIdHolder: null,
@@ -556,6 +561,13 @@ export default {
     },
     // modals    
     setEditModal(item, index, button){
+      /////////////
+      this.dynamicMenu = [...this.menus]
+      Object.values(item.transactionItems).forEach(it => {
+        let i = this.dynamicMenu.findIndex(itemMenu => itemMenu.name === it.name)
+        this.dynamicMenu[i] = it
+      })
+      ////////////
       if(item !== null && index !== null){
         this.editFlag = true
         this.editTransactionModal.title = `Ubah Transaksi ${item.transactionId}`
@@ -563,7 +575,7 @@ export default {
         this.editTransactionModal.content.cashier = item.cashier
         this.editTransactionModal.content.tableNumber = item.tableNumber
 
-        this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', {id:item.key, flag: 0})
+        this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', {id:item.key})
         this.$root.$emit('bv::show::modal', this.editTransactionModal.id, button)
       }else{
         this.editFlag = false
@@ -571,7 +583,7 @@ export default {
           this.$root.$emit('bv::show::modal', "modal-no-menu", button)
         }else{
           this.editTransactionModal.title = `Tambah Transaksi Baru`
-          this.$root.$emit('bv::show::modal', this.editTransactionModal.id, button)
+          this.$nextTick(() => { this.$root.$emit('bv::show::modal', this.editTransactionModal.id, button) })
         }
       }
     },
