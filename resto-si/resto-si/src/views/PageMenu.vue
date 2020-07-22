@@ -98,7 +98,6 @@
           <b-form-input size="sm" v-model="editMenuModal.content.name"></b-form-input>
           <template v-if="$v.editMenuModal.content.name.$error">
             <div v-if="!$v.editMenuModal.content.name.required" class="form-error">*Nama menu wajib diisi</div>
-            <div v-if="!$v.editMenuModal.content.name.unique" class="form-error">*Nama menu tidak boleh sama</div>
           </template>
         </b-form-group>
         <!-- harga -->

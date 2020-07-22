@@ -228,7 +228,7 @@
           </b-col>
         </b-row>
         </div>
-        <div style="height:calc(80vh - 200px)">
+        <div>
           <!-- Table Menu-->
           <b-table
             show-empty
@@ -416,7 +416,6 @@ export default {
   validations: {
     editTransactionModal: {
       content : {
-        //transactionItems: {},
         tableNumber: { required },
       }
     },
@@ -508,7 +507,7 @@ export default {
 
       return this.$store.dispatch('transactions/createTransaction', {cashier: cashier, tableNumber: tableNumber, items: items})
       .then(() => {
-        //this.editTransaction.cashier = ''
+        //this.editTransaction.cashier = '' // use this when cashier is exist
         this.editTransactionModal.content.tableNumber = ''
         this.editTransactionModal.content.items = ''
         this.refreshMenuState()
