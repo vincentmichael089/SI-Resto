@@ -35,6 +35,11 @@
           <font-awesome-icon :icon="menu" class="sidebar-icon"/>
           Pengaturan Menu
         </b-list-group-item>
+        <b-list-group-item style="color: maroon" button @click="signOutAndRedirect()"
+          class="sidebar-item sidebar-route">
+          <font-awesome-icon :icon="logout" class="sidebar-icon"/>
+          Keluar
+        </b-list-group-item>
       </b-list-group>
       <template v-slot:footer>
         <div class="d-flex bg-dark text-light px-3 py-2">
@@ -46,7 +51,7 @@
 </template>
 
 <script>
-import { faBars, faHome, faCashRegister, faChartLine, faDatabase, faWrench } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faHome, faCashRegister, faChartLine, faDatabase, faWrench, faPowerOff } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   name: 'TheNav',
@@ -77,7 +82,14 @@ export default {
       appname: process.env.FIREBASE_PROJECT_ID
     }
   },
-  methods: {},
+  methods: {
+    signOutAndRedirect(){
+      this.$store.dispatch('auth/signOut').then(() => {
+        const redirectTo = this.$route.query.redirectTo || {name: 'Landing'}
+        this.$router.push(redirectTo)
+      })
+    }
+  },
   computed: {
     bars(){
       return faBars
@@ -96,6 +108,9 @@ export default {
     },
     menu(){
       return faWrench
+    },
+    logout(){
+      return faPowerOff
     }
   },
 }

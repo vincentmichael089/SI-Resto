@@ -36,6 +36,12 @@ export default {
   src: url("./assets/fonts/Barlow-SemiBold.ttf");
 }
 
+@font-face {
+  font-family: Barlow-Bold;
+  src: url("./assets/fonts/Barlow-Bold.ttf");
+}
+
+
 #app {
   font-family: Barlow-Regular;
   -webkit-font-smoothing: antialiased;
@@ -83,6 +89,10 @@ button {
 
 .f-semibold {
   font-family: Barlow-SemiBold;
+}
+
+.f-bold {
+  font-family: Barlow-Bold;
 }
 
 .box-shadow{

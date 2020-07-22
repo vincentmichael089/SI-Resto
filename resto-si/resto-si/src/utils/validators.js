@@ -10,3 +10,23 @@ export const uniqueMenu = (value) => {
       .once('value', snapshot => resolve(!snapshot.exists()))
   })
 }
+
+export const uniqueUsername = (value) => {
+  if (!vuelidateHelpers.req(value)) {
+    return true
+  }
+  return new Promise((resolve) => {
+    firebase.database().ref('users').orderByChild('usernameLower').equalTo(value.toLowerCase())
+      .once('value', snapshot => resolve(!snapshot.exists()))
+  })
+}
+
+export const uniqueEmail = (value) => {
+  if (!vuelidateHelpers.req(value)) {
+    return true
+  }
+  return new Promise((resolve) => {
+    firebase.database().ref('users').orderByChild('email').equalTo(value.toLowerCase())
+      .once('value', snapshot => resolve(!snapshot.exists()))
+  })
+}

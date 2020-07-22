@@ -4,15 +4,33 @@ import Menu from '../views/PageMenu.vue'
 import Recap from '../views/PageRecap.vue'
 import Home from '../views/PageInsight.vue'
 import Cashier from '../views/PageCashier.vue'
+import NotFound from '../views/PageNotFound.vue'
+import Landing from '../views/PageHome.vue'
+import Login from '../views/PageLogin.vue'
+import Register from '../views/PageRegister.vue'
 import CashierTransactionActive from '../components/CashierTransactionActive.vue'
 import CashierTransactionHistory from '../components/CashierTransactionHistory.vue'
-import NotFound from '../views/PageNotFound.vue'
 
 Vue.use(VueRouter)
 
   const routes = [
   {
     path: '/',
+    name: 'Landing',
+    component: Landing
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home
   },

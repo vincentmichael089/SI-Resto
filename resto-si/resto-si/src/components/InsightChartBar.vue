@@ -21,7 +21,6 @@ export default {
       options: {
         chart: {
           id: 'chart-visitor',
-          //group: 'timed',
           zoom: {
             enabled: false
           }

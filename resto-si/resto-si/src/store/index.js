@@ -4,6 +4,9 @@ import firebase from 'firebase'
 
 import menus from './modules/menus'
 import transactions from './modules/transactions'
+import auth from './modules/auth'
+import users from './modules/users'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -32,6 +35,8 @@ export default new Vuex.Store({
   },
   modules: {
     menus,
-    transactions
+    transactions,
+    auth,
+    users
   }
 })
