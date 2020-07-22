@@ -196,6 +196,9 @@
                   v-model="editTransactionModal.content.tableNumber"
                   placeholder="nomor meja..."
                 ></b-form-input>
+                <template v-if="$v.editTransactionModal.content.tableNumber.$error">
+                  <div v-if="!$v.editTransactionModal.content.tableNumber.required" class="form-error">*Nomor meja wajib diisi</div>
+                </template>
               </b-input-group>
             </b-form-group></b-col>
           <!-- Search bar -->
@@ -342,6 +345,7 @@
 <script>
 import { faPlus, faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
 import valueFormatter from '@/mixins/valueFormatter'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
   name: 'CashierTransactionActive',
@@ -404,6 +408,14 @@ export default {
         content: {}
       }
     }
+  },
+  validations: {
+    editTransactionModal: {
+      content : {
+        //transactionItems: {},
+        tableNumber: { required },
+      }
+    },
   },
   computed: {
     transactions(){
@@ -473,6 +485,11 @@ export default {
   },
   methods: {
     createTransaction(){
+      this.$v.editTransactionModal.$touch()
+      if (this.$v.editTransactionModal.content.$invalid) {
+        return // break the register method if form is invalid
+      }
+
       const cashier = this.editTransactionModal.content.cashier
       const tableNumber = this.editTransactionModal.content.tableNumber
       
@@ -508,6 +525,11 @@ export default {
       })
     },
     updateTransaction(){
+      this.$v.editTransactionModal.$touch()
+      if (this.$v.editTransactionModal.content.$invalid) {
+        return // break the register method if form is invalid
+      }
+      
       const arrayToObject2 = (array, keyField) =>
         array.reduce((obj, item) => {
           obj[item[keyField]] = item

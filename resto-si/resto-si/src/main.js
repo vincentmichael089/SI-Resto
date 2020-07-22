@@ -8,8 +8,10 @@ import router from './router'
 import store from './store'
 import firebase from 'firebase'
 import VueApexCharts from 'vue-apexcharts'
-
+import vuelidate from 'vuelidate'
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
+
+Vue.use(vuelidate)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)

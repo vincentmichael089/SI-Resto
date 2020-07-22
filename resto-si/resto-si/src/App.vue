@@ -116,4 +116,11 @@ button {
 .color-primary{
   background-color: #05bcc923;
 }
+
+.form-error{
+  width: 100%;
+  margin-top: .25rem;
+  font-size: 80%;
+  color: #dc3545;
+}
 </style>

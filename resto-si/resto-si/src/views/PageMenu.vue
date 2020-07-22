@@ -90,18 +90,31 @@
         body-class="px-4 pb-0"
         footerClass= 'pl-2 pb-2 border-top-0'
         >
+        <!-- nama menu -->
         <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Nama Menu" label-for="input-sm" label-class="f-semibold">
           <b-form-input size="sm" v-model="editMenuModal.content.name"></b-form-input>
+          <template v-if="$v.editMenuModal.content.name.$error">
+            <div v-if="!$v.editMenuModal.content.name.required" class="form-error">*Nama menu wajib diisi</div>
+          </template>
         </b-form-group>
+        <!-- harga -->
         <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Harga" label-for="input-sm" label-class="f-semibold">
           <b-form-input size="sm" v-model="editMenuModal.content.price"></b-form-input>
+          <template v-if="$v.editMenuModal.content.price.$error">
+            <div v-if="!$v.editMenuModal.content.price.required" class="form-error">*Harga wajib diisi</div>
+            <div v-if="!$v.editMenuModal.content.price.minLength" class="form-error">*Masukan nominal antara 500 sampai 1.000.000</div>
+          </template>
         </b-form-group>
+        <!-- jenis -->
         <b-form-group label-cols="3" label-cols-lg="3" label-size="sm" label="Jenis" label-for="input-sm" label-class="f-semibold">
           <b-form-select v-model="editMenuModal.content.type" :options="typeOptions">
             <template v-slot:first>
               <b-form-select-option :value="null" disabled>-- Pilih jenis menu --</b-form-select-option>
             </template>
           </b-form-select>
+          <template v-if="$v.editMenuModal.content.type.$error">
+            <div v-if="!$v.editMenuModal.content.type.required" class="form-error">*Tipe menu wajib dipilih</div>
+          </template>
         </b-form-group>
         <template v-slot:modal-header>
           <div class="col pt-2 pl-2"><h5 class="pb-0 mb-0">{{editMenuModal.title}}</h5></div>
@@ -138,11 +151,12 @@
 
 <script>
 import { faTrash, faPen, faPlus} from '@fortawesome/free-solid-svg-icons'
+import { required, between } from 'vuelidate/lib/validators'
 import valueFormatter from '@/mixins/valueFormatter'
 
 export default {
   name: 'Menu',
-   mixins: [valueFormatter],
+  mixins: [valueFormatter],
   data(){
     return {
       editFlag: true,
@@ -196,6 +210,15 @@ export default {
       }
     }
   },
+  validations: {
+    editMenuModal: {
+      content: {
+        name: { required },
+        price: { required, between: between(500, 1000000)},
+        type: { required }
+      }
+    }
+  },
   computed: {
     menus(){
       return Object.values(this.$store.state.menus.items)
@@ -222,6 +245,10 @@ export default {
   },
   methods: {
     createMenu(){
+      this.$v.editMenuModal.$touch()
+      if (this.$v.editMenuModal.content.$invalid) {
+        return // break the register method if form is invalid
+      }
       const name = this.editMenuModal.content.name
       const price = this.editMenuModal.content.price
       const type = this.editMenuModal.content.type
@@ -232,6 +259,9 @@ export default {
       })
     },
     updateMenu(){
+      if (this.$v.editMenuModal.content.$invalid) {
+        return // break the register method if form is invalid
+      }
       const payload = {
         id: this.editMenuModal.content.key, 
         newName: this.editMenuModal.content.name, 
