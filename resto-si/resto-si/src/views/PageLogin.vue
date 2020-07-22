@@ -9,7 +9,7 @@
         <div class="col-md-7 p-4" style="margin: auto;">
           <div style="background-color: white;" class="box-shadow p-4">
             <div class="p-4 text-center">
-              <div class="f-bold" style="font-size: 4vh; line-height: 1.2">Daftar SIRESTO</div>
+              <div class="f-bold" style="font-size: 4vh; line-height: 1.2">Masuk SIRESTO</div>
             </div>
             <div style="margin:auto" class="p-3">
               <div class="pb-3">

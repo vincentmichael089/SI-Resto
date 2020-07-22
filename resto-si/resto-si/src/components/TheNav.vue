@@ -35,7 +35,7 @@
           <font-awesome-icon :icon="menu" class="sidebar-icon"/>
           Pengaturan Menu
         </b-list-group-item>
-        <b-list-group-item style="color: maroon" button @click="signOutAndRedirect()"
+        <b-list-group-item style="color: maroon" :to="{ name: 'Logout' }"
           class="sidebar-item sidebar-route">
           <font-awesome-icon :icon="logout" class="sidebar-icon"/>
           Keluar
@@ -82,14 +82,7 @@ export default {
       appname: process.env.FIREBASE_PROJECT_ID
     }
   },
-  methods: {
-    signOutAndRedirect(){
-      this.$store.dispatch('auth/signOut').then(() => {
-        const redirectTo = this.$route.query.redirectTo || {name: 'Landing'}
-        this.$router.push(redirectTo)
-      })
-    }
-  },
+  methods: {},
   computed: {
     bars(){
       return faBars
