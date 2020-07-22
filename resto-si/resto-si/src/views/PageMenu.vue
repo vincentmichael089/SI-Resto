@@ -274,6 +274,7 @@ export default {
       })
     },
     refreshAndCloseEditMenu(){
+      this.$nextTick(() => { this.$v.$reset() })
       this.editMenuModal.content.name = ''
       this.editMenuModal.content.price = ''
       this.editMenuModal.content.type = null

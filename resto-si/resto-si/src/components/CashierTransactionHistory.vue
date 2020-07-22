@@ -507,6 +507,7 @@ export default {
       })
     },
     cancelTransaction(){
+      this.$nextTick(() => { this.$v.$reset() })
       this.editTransactionModal.content.tableNumber = ''
       this.editTransactionModal.content.items = ''
       this.filterMenu = ''
