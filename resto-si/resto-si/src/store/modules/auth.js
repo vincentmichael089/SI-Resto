@@ -32,11 +32,11 @@ export default {
       })
     },
 
-    registerUserWithEmailAndPassword (context, {email, password}) {
+    registerUserWithEmailAndPassword (context, {name, email, password}) {
       return firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(userCredential => {
         // use users/ namespace to access other modules actions. dont forget to set root to true
-        return context.dispatch('users/createUser', {id: userCredential.user.uid, email }, {root: true})
+        return context.dispatch('users/createUser', {id: userCredential.user.uid, email, name }, {root: true})
       })
       .then(() => context.dispatch('fetchAuthUser'))
     },

@@ -167,13 +167,14 @@ export default{
         return Promise.resolve(context.state.items[transactionId])
       })
     },
-    updateTransaction(context, {id, newTableNumber, newItems}){
+    updateTransaction(context, {id, newTableNumber, newCashier, newItems}){
       return new Promise((resolve) => {
         const transaction = context.state.items[id]
         const lastEditAt = Math.floor(Date.now() / 1000)
 
         const updates = {}
         updates.tableNumber = newTableNumber
+        updates.cashier = newCashier
         updates.items = newItems
         updates.lastEditAt = lastEditAt
 

@@ -28,7 +28,9 @@
                   <div v-else-if="!$v.form.password.minLength" class="form-error">*Password minimal 6 karakter</div>
                 </template>
               </div>
-              <b-button variant="info" class="button-primary f-semibold p-2 m-2 px-4" @click="login()">Masuk</b-button>
+              <b-button variant="info" class="button-primary f-semibold p-2 m-2 px-4" @click="login()" :disabled="isBusy" style="width: 100px">
+                <div v-if="!isBusy">Masuk</div><b-spinner v-else variant="light" class="align-middle" small/>
+              </b-button>
               <span class="pl-2">Sudah punya akun?  <router-link :to="{ name: 'Register'}">Daftar</router-link></span>
             </div>
           </div>
@@ -47,7 +49,8 @@ export default {
       form: {
         email: null,
         password: null
-      }
+      },
+      isBusy: false
     }
   },
   validations: {
@@ -66,18 +69,23 @@ export default {
       if (this.$v.form.$invalid) {
         return // break the register method if form is invalid
       }else if (!this.$v.form.$invalid) {
+        this.isBusy = true
         this.$store.dispatch('auth/signInWithEmailAndPassword', {
           email: this.form.email,
           password: this.form.password
         })
         .then(() => this.successRedirect())
-        .catch(error => alert(error.message))
+        .catch(error => {
+          alert(error.message)
+          this.isBusy = false  
+        })
       }
     },
 
     successRedirect () {
       const redirectTo = this.$route.query.redirectTo || {name: 'Home'}
       this.$router.push(redirectTo)
+      this.isBusy = false
     }
   }
 }

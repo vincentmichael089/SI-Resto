@@ -350,6 +350,7 @@
 import { faPlus, faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
 import valueFormatter from '@/mixins/valueFormatter'
 import { required } from 'vuelidate/lib/validators'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'CashierTransactionActive',
@@ -401,7 +402,7 @@ export default {
         title: '',
         content : {
           key: null,
-          cashier: 'mock',
+          cashier: 'null',
           transactionItems: {},
           tableNumber: null,
         }
@@ -421,6 +422,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({
+      'user': 'auth/authUser'
+    }),
     transactions(){
       return [...Object.values(this.$store.state.transactions.items)].map(transaction => {
         let sum = 0;
@@ -493,7 +497,7 @@ export default {
         return // break the register method if form is invalid
       }
 
-      const cashier = this.editTransactionModal.content.cashier
+      const cashier = this.user.name
       const tableNumber = this.editTransactionModal.content.tableNumber
       
       const arrayToObject = (array, keyField) =>
@@ -546,6 +550,7 @@ export default {
       const payload = {
         id: this.editTransactionModal.content.key,
         newTableNumber: this.editTransactionModal.content.tableNumber,
+        newCashier: this.user.name,
         newItems: items
       }
 

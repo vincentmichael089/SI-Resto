@@ -9,11 +9,12 @@ export default {
   },
   getters: {},
   actions: {
-    createUser (context, {id, email}) {
+    createUser (context, {id, email, name}) {
       return new Promise((resolve) => {
         const timestamp = Math.floor(Date.now() / 1000)
         email = email.toLowerCase()
-        const user = {email, registeredAt: timestamp}
+        name = name.toLowerCase()
+        const user = {email, name, registeredAt: timestamp}
 
         firebase.database().ref('users').child(id).set(user)
         .then(() => {

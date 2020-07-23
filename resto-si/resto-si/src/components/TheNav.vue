@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky">
+  <div class="sticky"  v-if="user">
     <button v-b-toggle.sidebar-backdrop class="burgerbar">
       <font-awesome-icon :icon="bars"/> SIRESTO
     </button>
@@ -10,6 +10,10 @@
       shadow
       bg-variant="white"
     >
+      <div class="text-center py-4">
+        <div><b-avatar src="https://placekitten.com/300/300" size="4rem"></b-avatar></div>
+        <div class="f-semibold pt-2">{{user.name}}</div>
+      </div>
       <b-list-group>
         <b-list-group-item 
           :to="{ name: 'Home' }"
@@ -52,6 +56,7 @@
 
 <script>
 import { faBars, faHome, faCashRegister, faChartLine, faDatabase, faWrench, faPowerOff } from '@fortawesome/free-solid-svg-icons'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'TheNav',
@@ -84,6 +89,9 @@ export default {
   },
   methods: {},
   computed: {
+    ...mapGetters({
+      'user': 'auth/authUser'
+    }),
     bars(){
       return faBars
     },

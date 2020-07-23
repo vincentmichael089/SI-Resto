@@ -74,7 +74,7 @@ Vue.use(VueRouter)
     meta: { requiresAuth: true },
     beforeEnter (to, from, next) {
       store.dispatch('auth/signOut')
-      .then(() => next({name: 'Home'}))
+      .then(() => next({name: 'Landing'}))
     }
   },
   {

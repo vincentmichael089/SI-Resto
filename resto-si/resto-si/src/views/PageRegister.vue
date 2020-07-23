@@ -13,6 +13,13 @@
             </div>
             <div style="margin:auto" class="p-3">
               <div class="pb-3">
+                <div class="pb-3"> 
+                  <div class="f-semibold pb-1">Nama</div>
+                  <b-form-input v-model="form.name" v-on:blur="$v.form.name.$touch()"></b-form-input>
+                  <template v-if="$v.form.name.$error">
+                    <div v-if="!$v.form.name.required" class="form-error">*Nama wajib diisi</div>
+                  </template>
+                </div>
                 <div class="f-semibold pb-1">Alamat Email</div>
                 <b-form-input v-model="form.email" v-on:blur="$v.form.email.$touch()"></b-form-input>
                 <template v-if="$v.form.email.$error">
@@ -47,13 +54,16 @@ export default {
   data(){
     return{
       form: {
+        name: null,
         email: null,
         password: null
-      }
+      },
+      isBusy: false
     }
   },
   validations: {
     form: {
+      name: {required},
       email: {
         required, unique: uniqueEmail, email
       },
@@ -68,14 +78,16 @@ export default {
       if (this.$v.form.$invalid) {
         return // break the register method if form is invalid
       }
-            
+      
+      this.isBusy = true
       this.$store.dispatch('auth/registerUserWithEmailAndPassword', this.form)
       .then(() => this.successRedirect())
     },
 
     successRedirect () {
-      const redirectTo = this.$route.query.redirectTo || {name: 'Login'}
+      const redirectTo = this.$route.query.redirectTo || {name: 'Home'}
       this.$router.push(redirectTo)
+      this.isBusy = false
     }
   }
 }
