@@ -14,6 +14,7 @@ untuk menghindari hal-hal yang tidak sepatutnya terjadi
 - [Electron](https://electron.atom.io)
 - [Bootstrap-Vue](https://bootstrap-vue.org/)
 - [Firebase](https://firebase.google.com/)
+- [ApexCharts](https://apexcharts.com/)
 
 <b>Credits:</b>
 - Ayah dan Ibu ✊
