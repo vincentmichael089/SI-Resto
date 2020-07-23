@@ -1,0 +1,59 @@
+{
+  "menus" : {
+    "-MCiDq8ZycWMpJBdIaAA" : {
+      "name" : "Ayam",
+      "price" : "8000",
+      "type" : "food"
+    },
+    "-MCpI0n_VDVZplhDY8gi" : {
+      "name" : "Jeruk",
+      "price" : "6000",
+      "type" : "drink"
+    },
+    "-MCpKIVSCzevpNnnPou8" : {
+      "name" : "Jus",
+      "price" : "12000",
+      "type" : "food"
+    },
+    "-MCpKeLMynVcFKIq-qGY" : {
+      "name" : "Nasi Uduk",
+      "price" : "5500",
+      "type" : "food"
+    },
+    "-MCrJQOV2LcV0lDWcwHo" : {
+      "name" : "Nasi Goreng",
+      "price" : "13000",
+      "type" : "food"
+    },
+    "-MCrO5XWPYsxCSh4gTm5" : {
+      "name" : "Ketoprak",
+      "price" : "20000",
+      "type" : "food"
+    }
+  },
+  "transactions" : {
+    "-MBSjuxRwv0BeRErvvE3" : {
+      "active" : false,
+      "cashier" : "mock",
+      "date" : "2020-07-03",
+      "items" : {
+        "MBF_yFcsJbpJ9g8rzKv" : {
+          "name" : "Bubur",
+          "price" : 12000,
+          "qty" : 2,
+          "type" : "food"
+        }
+      },
+      "lastEditAt" : 1593761361,
+      "tableNumber" : 12,
+      "timestamp" : 1593761361
+    }
+  },
+  "users" : {
+    "-08IGNE" : {
+      "email" : "mock@mo.ck",
+      "name" : "mock",
+      "registeredAt" : 1595492482
+    }
+  }
+}
