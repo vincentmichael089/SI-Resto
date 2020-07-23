@@ -30,3 +30,13 @@ export const uniqueEmail = (value) => {
       .once('value', snapshot => resolve(!snapshot.exists()))
   })
 }
+
+export const uniqueName = (value) => {
+  if (!vuelidateHelpers.req(value)) {
+    return true
+  }
+  return new Promise((resolve) => {
+    firebase.database().ref('users').orderByChild('name').equalTo(value.toLowerCase())
+      .once('value', snapshot => resolve(!snapshot.exists()))
+  })
+}

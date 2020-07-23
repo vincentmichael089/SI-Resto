@@ -437,7 +437,7 @@ export default {
         
         return { 
           key: transaction['.key'],
-          transactionId: transaction.cashier.toUpperCase().concat(`-${transaction.tableNumber}-`.concat(transaction.timestamp)),
+          transactionId: transaction.cashier.toUpperCase().substring(0, 4).concat(`-${transaction.tableNumber}-`.concat(transaction.timestamp)),
           cashier: transaction.cashier,
           tableNumber: transaction.tableNumber,
           timestamp: transaction.timestamp,

@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 80vh">
+  <div style="height: 80vh; padding-top: 5%">
     <div class="container">
       <div class="row" style="height: 70vh">
         <div class="col-md-5 d-none d-lg-block pl-3 pt-4" style="margin: auto;">
@@ -18,6 +18,7 @@
                   <b-form-input v-model="form.name" v-on:blur="$v.form.name.$touch()"></b-form-input>
                   <template v-if="$v.form.name.$error">
                     <div v-if="!$v.form.name.required" class="form-error">*Nama wajib diisi</div>
+                    <div v-else-if="!$v.form.name.unique" class="form-error">*Nama sudah terdaftar</div>
                   </template>
                 </div>
                 <div class="f-semibold pb-1">Alamat Email</div>
@@ -25,7 +26,7 @@
                 <template v-if="$v.form.email.$error">
                   <div v-if="!$v.form.email.required" class="form-error">*Alamat email wajib diisi</div>
                   <div v-else-if="!$v.form.email.email" class="form-error">*Format alamat email salah</div>
-                  <div v-else-if="!$v.form.email.uniqueEmail" class="form-error">*Format alamat email salah</div>
+                  <div v-else-if="!$v.form.email.unique" class="form-error">*Alamat email sudah terdaftar</div>
                 </template>
               </div>
               <div class="pb-3"> 
@@ -48,7 +49,7 @@
 
 <script>
 import {required, email, minLength} from 'vuelidate/lib/validators'
-import {uniqueEmail} from '@/utils/validators'
+import {uniqueEmail, uniqueName} from '@/utils/validators'
 
 export default {
   data(){
@@ -63,7 +64,7 @@ export default {
   },
   validations: {
     form: {
-      name: {required},
+      name: { required, unique: uniqueName },
       email: {
         required, unique: uniqueEmail, email
       },

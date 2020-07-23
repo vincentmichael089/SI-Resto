@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 80vh">
+  <div style="height: 80vh; padding-top: 5%">
     <div class="container">
       <div class="row" style="height: 70vh">
         <div class="col-md-5 d-none d-lg-block pl-3 pt-4" style="margin: auto;">
@@ -31,7 +31,7 @@
               <b-button variant="info" class="button-primary f-semibold p-2 m-2 px-4" @click="login()" :disabled="isBusy" style="width: 100px">
                 <div v-if="!isBusy">Masuk</div><b-spinner v-else variant="light" class="align-middle" small/>
               </b-button>
-              <span class="pl-2">Sudah punya akun?  <router-link :to="{ name: 'Register'}">Daftar</router-link></span>
+              <span class="pl-2">Belum punya akun?  <router-link :to="{ name: 'Register'}">Daftar</router-link></span>
             </div>
           </div>
         </div>
