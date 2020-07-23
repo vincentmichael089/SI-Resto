@@ -2,7 +2,7 @@
   <div style="height: 80vh; padding-top: 5%">
     <div class="container">
       <div class="row" style="height: 70vh">
-        <div class="col-md-5 d-none d-lg-block pl-3 pt-4" style="margin: auto;">
+        <div class="col-md-5 d-none d-lg-block pl-3 pt-4" style="margin-top: 15%">
           <div class="f-bold" style="font-size: 4vh; line-height: 1.2">Kasir rumah makan, semakin mudah dan pintar.</div>
           <div class="f-regular pt-2" style="font-size: 2.4vh; line-height: 1">Kasir, Riwayat Transaksi, dan Insight dalam satu aplikasi.</div>
         </div>
