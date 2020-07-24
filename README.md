@@ -3,6 +3,9 @@
 Sistem kasir rumah makan sederhana untuk mengkonversi sistem kasir manual menjadi digital dengan harapan mempercepat, mempermudah, dan dapat memberi informasi baru
 untuk mengembangkan bisnis rumah makan. Dilengkapi dengan fitur Sistem Kasir, Pencatatan Transaksi, Visualisasi informasi transaksi, dan Market Basket Analysis.
 
+
+Perlu diingat adalah sistem informasi seinovatif apapun pada akhirnya hanyalah alat, bagaimana bisnis berkembang kembali ke tangan pelaku usahanya.
+
 <b>Demo (harap baca 2 poin dibawah url):</b> 
 https://siresto.web.app/ 
 - demo dilengkapi otentifikasi kasir yang melakukan pencatatan transaksi, murni untuk menunjukan fungsionalitas inti)
