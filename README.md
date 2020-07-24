@@ -8,7 +8,7 @@ Perlu diingat adalah sistem informasi seinovatif apapun pada akhirnya hanyalah a
 
 <b>Demo (harap baca 2 poin dibawah url):</b> 
 https://siresto.web.app/ 
-- demo dilengkapi otentifikasi kasir yang melakukan pencatatan transaksi, murni untuk menunjukan fungsionalitas inti)
+- Otentifikasi kasir pada demo dihilangkan, murni untuk menunjukan fungsionalitas inti
 - rules write telah di-disable sehingga tidak dapat dilakukan penambahan / pengubahan / penghapsan transaksi pada demo 
 untuk menghindari hal-hal yang tidak sepatutnya terjadi
 
