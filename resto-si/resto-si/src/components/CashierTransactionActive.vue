@@ -591,6 +591,7 @@ export default {
     setInfoModal(item, index, button){
       this.finishFlag = isNaN(index) ? true : false
       this.transactionIdHolder = index,
+      this.infoTransactionModal.cashier = this.user.name
       this.infoTransactionModal.title = `Rincian Transaksi ${item.transactionId}`
       this.infoTransactionModal.content = item
       this.$root.$emit('bv::show::modal', this.infoTransactionModal.id, button)
