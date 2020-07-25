@@ -51,7 +51,7 @@
       </div>
       <div class="row pt-4">
         <div class="col-12">
-          <div class="p-2 box-shadow card-bg">
+          <div class="p-2 box-shadow card-bg  pb-4 mb-4">
             <div class="p-3"><h5 class="f-semibold">Pasangan / Triplet Menu {{chartTitle}}</h5></div>
             <InsightTableMarketBasket :transactionsByTime="transactionsByTime"/>
           </div>
