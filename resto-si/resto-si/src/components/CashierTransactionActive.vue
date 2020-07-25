@@ -573,7 +573,7 @@ export default {
         this.editFlag = true
         this.editTransactionModal.title = `Ubah Transaksi ${item.transactionId}`
         this.editTransactionModal.content.key = item.key
-        this.editTransactionModal.content.cashier = item.cashier
+        this.editTransactionModal.content.cashier = this.user.name
         this.editTransactionModal.content.tableNumber = item.tableNumber
 
         this.$store.dispatch('menus/fetchAllMenusModifiedByTransactionId', {id:item.key})
