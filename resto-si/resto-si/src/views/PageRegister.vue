@@ -37,7 +37,9 @@
                   <div v-else-if="!$v.form.password.minLength" class="form-error">*Password minimal 6 karakter</div>
                 </template>
               </div>
-              <b-button variant="info" class="button-primary f-semibold p-2 m-2 px-4" @click="register()">Daftar</b-button>
+              <b-button variant="info" class="button-primary f-semibold p-2 m-2 px-4" @click="register()" :disabled="isBusy" style="width: 100px">
+                <div v-if="!isBusy">Daftar</div><b-spinner v-else variant="light" class="align-middle" small/>
+              </b-button>
               <span class="pl-2">Sudah punya akun?  <router-link :to="{ name: 'Login'}">Masuk</router-link></span>
             </div>
           </div>

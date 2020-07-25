@@ -72,7 +72,7 @@ npm run electron:build
   Slider pada bagian atas table dapat diubah untuk memfilter rules berdasarkan tingkat support atau confidence tertentu. Adanya Market Basket Analysis diharapkan dapat membantu
   pengguna untuk membuat paket menu ataupun mengkombinasikan menu paket dengan menu baru yang akan diluncurkan. Karena pertimbangan waktu komputasi rules yang dihasilkan terbatas pada 3 item menu saja.
   
-  > perkiraan kompleksitas: (jumlahMenu)kombinasi(3 item) * jumlahTransaksiKeseluruhan
+  > perkiraan kompleksitas: 2^(n) * jumlahTransaksiKeseluruhan, dengan n maksimal banyak menu yang ingin dipaketkan.
 
 </div>
 <br>

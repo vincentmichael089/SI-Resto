@@ -18,7 +18,8 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Landing',
-    component: Landing
+    component: Landing,
+    meta: { requiresGuest: true }
   },
   {
     path: '/login',

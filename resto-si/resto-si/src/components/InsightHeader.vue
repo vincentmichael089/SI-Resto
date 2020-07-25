@@ -43,9 +43,8 @@ export default {
 
 <style>
 .card-1{
-
-background-image: linear-gradient(315deg, #84fb95 0%, #0fd64f 74%);
-background-color: #84fb95;
+  background-image: linear-gradient(315deg, #84fb95 0%, #0fd64f 74%);
+  background-color: #84fb95;
   color: #ffffff;
 }
 
