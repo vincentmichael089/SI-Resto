@@ -3,9 +3,6 @@
 Sistem kasir rumah makan sederhana untuk mengkonversi sistem kasir manual menjadi digital dengan harapan mempercepat, mempermudah, dan dapat memberi informasi baru
 untuk mengembangkan bisnis rumah makan. Dilengkapi dengan fitur Sistem Kasir, Pencatatan Transaksi, Visualisasi informasi transaksi, dan Market Basket Analysis.
 
-
-Perlu diingat adalah sistem informasi seinovatif apapun pada akhirnya hanyalah alat, bagaimana bisnis berkembang kembali ke tangan pelaku usahanya.
-
 <b>Demo (harap baca 2 poin dibawah url):</b> 
 https://siresto.web.app/ 
 - Otentifikasi kasir pada demo dihilangkan, murni untuk menunjukan fungsionalitas inti
@@ -18,11 +15,6 @@ untuk menghindari hal-hal yang tidak sepatutnya terjadi
 - [Bootstrap-Vue](https://bootstrap-vue.org/)
 - [Firebase](https://firebase.google.com/)
 - [ApexCharts](https://apexcharts.com/)
-
-<b>Credits:</b>
-- Ayah dan Ibu ✊
-- [Ibu Yunita](https://github.com/yunitata) Kelas Data Mining dan Business Intelligence Universitas Gadjah Mada (Market Basket Analysis) 
-- [Mamikos MAMICAMP 2020](https://mamikos.com/) Kelas Front-end (Vue+Firebase) 
 
 ## Instalasi
 1. &nbsp;Jalankan perintah npm install pada terminal untuk menginstall dependensi yang dibutuhkan
